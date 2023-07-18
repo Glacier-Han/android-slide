@@ -5,13 +5,16 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
+import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import com.glacier.androidslide.databinding.ActivityMainBinding
 import com.glacier.androidslide.util.Mode
 import com.glacier.androidslide.util.UtilManager
 import com.glacier.androidslide.model.SquareSlide
+import com.glacier.androidslide.viewmodel.SquareSlideViewModel
 
 class MainActivity : AppCompatActivity(), OnClickListener {
 
@@ -20,6 +23,8 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     private var nowAlpha = 10
     private var nowSlideIndex = 0
     private lateinit var nowSlide: SquareSlide
+
+    private val slideViewModel: SquareSlideViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +41,11 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding.btnAlphaPlus.setOnClickListener(this)
 
         setNewSlide()
+
+        slideViewModel.nowAlpha.observe(this) {
+            binding.tvAlphaMonitor?.text = it.toString()
+            setSlideView(slideViewModel.nowSlideIndex.value!!)
+        }
     }
 
 
@@ -59,11 +69,13 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             }
 
             R.id.btn_alpha_minus -> {
-                editAlpha(Mode.MINUS)
+                slideViewModel.editAlpha(Mode.MINUS)
+                //editAlpha(Mode.MINUS)
             }
 
             R.id.btn_alpha_plus -> {
-                editAlpha(Mode.PLUS)
+                slideViewModel.editAlpha(Mode.PLUS)
+                //editAlpha(Mode.PLUS)
             }
         }
     }
@@ -80,7 +92,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     }
 
     private fun setSlideView(index: Int) {
-        val slide = slideManager.getSlideByIndex(index)
+        val slide = slideViewModel.nowSlide.value
         slide?.let {
             binding.ivSlide.setImageDrawable(
                 ColorDrawable(
