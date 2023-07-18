@@ -1,6 +1,6 @@
-package com.glacier.androidslidesofteer.model
+package com.glacier.androidslide.model
 
 
 interface SquareSlideFactory {
-    fun createItem(id_: String): SquareSlide
+    fun createItem(r: Int, g: Int, b: Int, alpha: Int): SquareSlide
 }

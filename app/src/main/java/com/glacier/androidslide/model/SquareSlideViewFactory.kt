@@ -1,16 +1,13 @@
-package com.glacier.androidslidesofteer.model
+package com.glacier.androidslide.model
 
+import com.glacier.androidslide.util.UtilManager
 import kotlin.random.Random
 
-
 object SquareSlideViewFactory : SquareSlideFactory {
-    override fun createItem(id_: String): SquareSlide {
+    override fun createItem(r: Int, g: Int, b: Int, alpha: Int): SquareSlide {
+        val id = UtilManager.generateID(9)
         val side = Random.nextInt(0, 1000)
-        val r = Random.nextInt(0, 255)
-        val g = Random.nextInt(0, 255)
-        val b = Random.nextInt(0, 255)
-        val alpha = Random.nextInt(0, 10)
 
-        return SquareSlide(id_, side, r, g, b, alpha)
+        return SquareSlide(id, side, r, g, b, alpha)
     }
 }
