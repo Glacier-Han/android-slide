@@ -17,8 +17,7 @@ class SquareSlideViewModel : ViewModel() {
     private val _nowSlideIndex = MutableLiveData<Int>()
     val nowSlideIndex = _nowSlideIndex
 
-    private val _nowSlide = MutableLiveData<SquareSlide>()
-    val nowSlide = _nowSlide
+
 
     // 초기값 설정
     init {
@@ -26,21 +25,20 @@ class SquareSlideViewModel : ViewModel() {
         _nowSlideIndex.value = 0
     }
 
-    fun getSlideByIndex(index: Int){
-        _nowSlide.value = slideManager.getSlideByIndex(index)
+    fun getNowSlide(): SquareSlide?{
+        return slideManager.getSlideByIndex(_nowSlideIndex.value!!)
     }
 
     fun editAlpha(mode: Mode) {
         when (mode) {
             Mode.MINUS -> {
+                Log.d("TEST", "MINUS")
                 if (_nowAlpha.value!! > 1) {
                     _nowAlpha.value = _nowAlpha.value!! - 1
                     slideManager.editSlideAlpha(
                         _nowSlideIndex.value!!,
                         UtilManager.getAlphaMode(_nowAlpha.value!!)
                     )
-                    //setSlideView(nowSlideIndex)
-                    //binding.tvAlphaMonitor?.text = nowAlpha.toString()
                 }
             }
 
@@ -51,14 +49,12 @@ class SquareSlideViewModel : ViewModel() {
                         _nowSlideIndex.value!!,
                         UtilManager.getAlphaMode(_nowAlpha.value!!)
                     )
-                    //setSlideView(nowSlideIndex)
-                    //binding.tvAlphaMonitor?.text = nowAlpha.toString()
                 }
             }
         }
     }
 
-    private fun editColorRandom(){
+    fun editColorRandom(){
         val randomR = UtilManager.getRandomColor()[0]
         val randomG = UtilManager.getRandomColor()[1]
         val randomB = UtilManager.getRandomColor()[2]
@@ -67,14 +63,12 @@ class SquareSlideViewModel : ViewModel() {
         //setSlideView(nowSlideIndex)
     }
 
-    private fun setNewSlide() {
+    fun setNewSlide() {
         val randomR = UtilManager.getRandomColor()[0]
         val randomG = UtilManager.getRandomColor()[1]
         val randomB = UtilManager.getRandomColor()[2]
 
-        _nowSlide.value =
-            slideManager.createSlide(randomR, randomG, randomB, UtilManager.getAlphaMode(_nowAlpha.value!!))
-        //setSlideView(slideManager.getSlideCount() - 1)
+        slideManager.createSlide(randomR, randomG, randomB, UtilManager.getAlphaMode(_nowAlpha.value!!))
         _nowSlideIndex.value = slideManager.getSlideCount() - 1
     }
 }

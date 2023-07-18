@@ -40,11 +40,12 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding.btnAlphaMinus.setOnClickListener(this)
         binding.btnAlphaPlus.setOnClickListener(this)
 
-        setNewSlide()
+        slideViewModel.setNewSlide()
+        setSlideView()
 
         slideViewModel.nowAlpha.observe(this) {
             binding.tvAlphaMonitor?.text = it.toString()
-            setSlideView(slideViewModel.nowSlideIndex.value!!)
+            setSlideView()
         }
     }
 
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.iv_slide -> {
-                setSlideView(slideManager.getSlideCount() - 1)
+                setSlideView()
                 binding.ivSlide.background =
                     AppCompatResources.getDrawable(baseContext, R.drawable.border_black)
             }
@@ -70,71 +71,32 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
             R.id.btn_alpha_minus -> {
                 slideViewModel.editAlpha(Mode.MINUS)
-                //editAlpha(Mode.MINUS)
             }
 
             R.id.btn_alpha_plus -> {
                 slideViewModel.editAlpha(Mode.PLUS)
-                //editAlpha(Mode.PLUS)
             }
         }
     }
 
-    private fun setNewSlide() {
-        val randomR = UtilManager.getRandomColor()[0]
-        val randomG = UtilManager.getRandomColor()[1]
-        val randomB = UtilManager.getRandomColor()[2]
-
-        nowSlide =
-            slideManager.createSlide(randomR, randomG, randomB, UtilManager.getAlphaMode(nowAlpha))
-        setSlideView(slideManager.getSlideCount() - 1)
-        nowSlideIndex = slideManager.getSlideCount() - 1
-    }
-
-    private fun setSlideView(index: Int) {
-        val slide = slideViewModel.nowSlide.value
+    private fun setSlideView() {
+        val slide = slideViewModel.getNowSlide()
         slide?.let {
-            binding.ivSlide.setImageDrawable(
-                ColorDrawable(
-                    Color.argb(UtilManager.getAlphaMode(nowAlpha), slide.R, slide.G, slide.B)
-                )
-            )
-            setBgColorBtnColor(UtilManager.getAlphaMode(nowAlpha), slide.R, slide.G, slide.B)
-            binding.tvAlphaMonitor?.text = nowAlpha.toString()
-            binding.btnBgcolor.text =
-                UtilManager.rgbToHex(slide.R, slide.G, slide.B)
+            Log.d("TEST", "$slide ${slideViewModel.nowSlideIndex.value} ${it.alpha}")
+            binding.ivSlide.setImageDrawable(ColorDrawable(Color.argb(it.alpha, it.R, it.G, it.B)))
+            setBgColorBtnColor(it.alpha, it.R, it.G, it.B)
+            binding.btnBgcolor.text = UtilManager.rgbToHex(it.R, it.G, it.B)
         }
 
     }
 
-    private fun editColorRandom(){
+    private fun editColorRandom() {
         val randomR = UtilManager.getRandomColor()[0]
         val randomG = UtilManager.getRandomColor()[1]
         val randomB = UtilManager.getRandomColor()[2]
 
         slideManager.editSlideColor(nowSlideIndex, randomR, randomG, randomB)
-        setSlideView(nowSlideIndex)
-    }
-    private fun editAlpha(mode: Mode) {
-        when (mode) {
-            Mode.MINUS -> {
-                if (nowAlpha > 1) {
-                    nowAlpha -= 1
-                    slideManager.editSlideAlpha(nowSlideIndex, UtilManager.getAlphaMode(nowAlpha))
-                    setSlideView(nowSlideIndex)
-                    binding.tvAlphaMonitor?.text = nowAlpha.toString()
-                }
-            }
-
-            Mode.PLUS -> {
-                if (nowAlpha < 10) {
-                    nowAlpha += 1
-                    slideManager.editSlideAlpha(nowSlideIndex, UtilManager.getAlphaMode(nowAlpha))
-                    setSlideView(nowSlideIndex)
-                    binding.tvAlphaMonitor?.text = nowAlpha.toString()
-                }
-            }
-        }
+        setSlideView()
     }
 
     private fun setBgColorBtnColor(alpha: Int, R: Int, G: Int, B: Int) {
