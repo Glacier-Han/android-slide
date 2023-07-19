@@ -17,6 +17,9 @@ class SquareSlideViewModel : ViewModel() {
     private val _nowSlideIndex = MutableLiveData<Int>()
     val nowSlideIndex = _nowSlideIndex
 
+    private val _nowSlide = MutableLiveData<SquareSlide>()
+    val nowSlide = _nowSlide
+
 
 
     // 초기값 설정
@@ -26,7 +29,8 @@ class SquareSlideViewModel : ViewModel() {
     }
 
     fun getNowSlide(): SquareSlide?{
-        return slideManager.getSlideByIndex(_nowSlideIndex.value!!)
+        _nowSlide.value = slideManager.getSlideByIndex(_nowSlideIndex.value!!)
+        return _nowSlide.value
     }
 
     fun editAlpha(mode: Mode) {
@@ -52,6 +56,7 @@ class SquareSlideViewModel : ViewModel() {
                 }
             }
         }
+        getNowSlide()
     }
 
     fun editColorRandom(){
@@ -70,5 +75,6 @@ class SquareSlideViewModel : ViewModel() {
 
         slideManager.createSlide(randomR, randomG, randomB, UtilManager.getAlphaMode(_nowAlpha.value!!))
         _nowSlideIndex.value = slideManager.getSlideCount() - 1
+        getNowSlide()
     }
 }

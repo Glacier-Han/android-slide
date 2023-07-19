@@ -40,20 +40,24 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding.btnAlphaMinus.setOnClickListener(this)
         binding.btnAlphaPlus.setOnClickListener(this)
 
+        setObserver()
         slideViewModel.setNewSlide()
-        setSlideView()
 
-        slideViewModel.nowAlpha.observe(this) {
-            binding.tvAlphaMonitor?.text = it.toString()
-            setSlideView()
-        }
     }
 
+    fun setObserver(){
+        slideViewModel.nowAlpha.observe(this) {
+            binding.tvAlphaMonitor?.text = it.toString()
+        }
+
+        slideViewModel.nowSlide.observe(this){
+            setSlideView(it)
+        }
+    }
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.iv_slide -> {
-                setSlideView()
                 binding.ivSlide.background =
                     AppCompatResources.getDrawable(baseContext, R.drawable.border_black)
             }
@@ -79,9 +83,8 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         }
     }
 
-    private fun setSlideView() {
-        val slide = slideViewModel.getNowSlide()
-        slide?.let {
+    private fun setSlideView(slide: SquareSlide) {
+        slide.let {
             Log.d("TEST", "$slide ${slideViewModel.nowSlideIndex.value} ${it.alpha}")
             binding.ivSlide.setImageDrawable(ColorDrawable(Color.argb(it.alpha, it.R, it.G, it.B)))
             setBgColorBtnColor(it.alpha, it.R, it.G, it.B)
@@ -96,7 +99,6 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         val randomB = UtilManager.getRandomColor()[2]
 
         slideManager.editSlideColor(nowSlideIndex, randomR, randomG, randomB)
-        setSlideView()
     }
 
     private fun setBgColorBtnColor(alpha: Int, R: Int, G: Int, B: Int) {
