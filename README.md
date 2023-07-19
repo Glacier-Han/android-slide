@@ -13,6 +13,7 @@ Android 학습 프로젝트 #2
 > - 배경색 버튼 누르면, 현재 슬라이드의 색상이 랜덤으로 바뀌고 Hex값이 버튼에 출력
 > - 투명도는 1~10 단계로 조절 가능하며 변경시 현재 슬라이드에 바로 적용
 > - 투명도는 Mode enum클래스를 만들어서 PLUS/MINUS 동작 관리
+> - SlideManagerTest에서 SlideManager 대상 단위테스트 검증
 
 | ![Screenshot_20230718_111702](https://github.com/softeerbootcamp-2nd/android-slide/assets/61905052/f72eb6c0-eacb-4776-82aa-fb7ceb458654) | ![Screenshot_20230718_111714](https://github.com/softeerbootcamp-2nd/android-slide/assets/61905052/033e27d1-67e0-4004-b073-bfabb7e1b20b) | ![Screenshot_20230718_111721](https://github.com/softeerbootcamp-2nd/android-slide/assets/61905052/112389fe-5251-42f4-84ac-6618b84646d8) |
 | ---- | ---- | ---- |
