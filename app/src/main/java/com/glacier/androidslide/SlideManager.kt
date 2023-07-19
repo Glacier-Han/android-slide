@@ -16,6 +16,10 @@ class SlideManager() {
         return slideList.size
     }
 
+    fun getAllSlides(): List<SquareSlide>{
+        return slideList
+    }
+
     fun getSlideByIndex(index: Int): SquareSlide? {
         return if (slideList.size > 0) {
             slideList[index]
