@@ -7,8 +7,9 @@ data class SquareSlide(
     var G: Int,
     var B: Int,
     var alpha: Int,
+    var selected: Boolean = true
 ) {
     override fun toString(): String {
-        return "($id), Side:$side, R:$R, G:$G, B:$B, Alpha:$alpha"
+        return "($id), Side:$side, R:$R, G:$G, B:$B, Alpha:$alpha, Selected:$selected"
     }
 }

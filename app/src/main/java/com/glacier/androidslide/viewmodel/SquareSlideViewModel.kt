@@ -20,15 +20,12 @@ class SquareSlideViewModel : ViewModel() {
     private val _nowSlide = MutableLiveData<SquareSlide>()
     val nowSlide = _nowSlide
 
-
-
-    // 초기값 설정
     init {
         _nowAlpha.value = 10
         _nowSlideIndex.value = 0
     }
 
-    fun getNowSlide(): SquareSlide?{
+    fun getNowSlide(): SquareSlide? {
         _nowSlide.value = slideManager.getSlideByIndex(_nowSlideIndex.value!!)
         return _nowSlide.value
     }
@@ -36,7 +33,6 @@ class SquareSlideViewModel : ViewModel() {
     fun editAlpha(mode: Mode) {
         when (mode) {
             Mode.MINUS -> {
-                Log.d("TEST", "MINUS")
                 if (_nowAlpha.value!! > 1) {
                     _nowAlpha.value = _nowAlpha.value!! - 1
                     slideManager.editSlideAlpha(
@@ -59,13 +55,18 @@ class SquareSlideViewModel : ViewModel() {
         getNowSlide()
     }
 
-    fun editColorRandom(){
+    fun setNowSlideSelected(selected: Boolean) {
+        slideManager.setNowSlideSelected(_nowSlideIndex.value!!, selected)
+        getNowSlide()
+    }
+
+    fun editColorRandom() {
         val randomR = UtilManager.getRandomColor()[0]
         val randomG = UtilManager.getRandomColor()[1]
         val randomB = UtilManager.getRandomColor()[2]
 
         slideManager.editSlideColor(_nowSlideIndex.value!!, randomR, randomG, randomB)
-        //setSlideView(nowSlideIndex)
+        getNowSlide()
     }
 
     fun setNewSlide() {
@@ -73,7 +74,12 @@ class SquareSlideViewModel : ViewModel() {
         val randomG = UtilManager.getRandomColor()[1]
         val randomB = UtilManager.getRandomColor()[2]
 
-        slideManager.createSlide(randomR, randomG, randomB, UtilManager.getAlphaMode(_nowAlpha.value!!))
+        slideManager.createSlide(
+            randomR,
+            randomG,
+            randomB,
+            UtilManager.getAlphaMode(_nowAlpha.value!!)
+        )
         _nowSlideIndex.value = slideManager.getSlideCount() - 1
         getNowSlide()
     }

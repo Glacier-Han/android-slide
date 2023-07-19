@@ -16,7 +16,7 @@ class SlideManager() {
         return slideList.size
     }
 
-    fun getAllSlides(): List<SquareSlide>{
+    fun getAllSlides(): List<SquareSlide> {
         return slideList
     }
 
@@ -39,6 +39,12 @@ class SlideManager() {
     fun editSlideAlpha(index: Int, alpha: Int) {
         if (slideList.isNotEmpty()) {
             slideList[index].alpha = alpha
+        }
+    }
+
+    fun setNowSlideSelected(index: Int, selected: Boolean) {
+        if (slideList.isNotEmpty()) {
+            slideList[index].selected = selected
         }
     }
 }

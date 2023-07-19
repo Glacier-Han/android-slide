@@ -19,11 +19,6 @@ import com.glacier.androidslide.viewmodel.SquareSlideViewModel
 class MainActivity : AppCompatActivity(), OnClickListener {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val slideManager = SlideManager()
-    private var nowAlpha = 10
-    private var nowSlideIndex = 0
-    private lateinit var nowSlide: SquareSlide
-
     private val slideViewModel: SquareSlideViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,27 +37,39 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
         setObserver()
         slideViewModel.setNewSlide()
+    }
+
+    fun setObserver() {
+        slideViewModel.nowSlide.observe(this) {
+            setSlideView(it)
+        }
+    }
+
+    private fun setSlideView(slide: SquareSlide) {
+        slide.let {
+            binding.ivSlide.setImageDrawable(ColorDrawable(Color.argb(it.alpha, it.R, it.G, it.B)))
+            binding.tvAlphaMonitor.text = slideViewModel.nowAlpha.value.toString()
+            binding.btnBgcolor.text = UtilManager.rgbToHex(it.R, it.G, it.B)
+            setBgColorBtnColor(it.alpha, it.R, it.G, it.B)
+        }
 
     }
 
-    fun setObserver(){
-        slideViewModel.nowAlpha.observe(this) {
-            binding.tvAlphaMonitor.text = it.toString()
-        }
-
-        slideViewModel.nowSlide.observe(this){
-            setSlideView(it)
-        }
+    private fun setBgColorBtnColor(alpha: Int, R: Int, G: Int, B: Int) {
+        binding.btnBgcolor.backgroundTintList =
+            ColorStateList.valueOf(Color.argb(alpha, R, G, B))
     }
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.iv_slide -> {
+                slideViewModel.setNowSlideSelected(true)
                 binding.ivSlide.background =
                     AppCompatResources.getDrawable(baseContext, R.drawable.border_black)
             }
 
             R.id.main_view -> {
+                slideViewModel.setNowSlideSelected(false)
                 binding.tvAlphaMonitor.text = ""
                 binding.btnBgcolor.text = ""
                 binding.ivSlide.background =
@@ -70,7 +77,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             }
 
             R.id.btn_bgcolor -> {
-                editColorRandom()
+                slideViewModel.editColorRandom()
             }
 
             R.id.btn_alpha_minus -> {
@@ -81,28 +88,5 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                 slideViewModel.editAlpha(Mode.PLUS)
             }
         }
-    }
-
-    private fun setSlideView(slide: SquareSlide) {
-        slide.let {
-            Log.d("TEST", "$slide ${slideViewModel.nowSlideIndex.value} ${it.alpha}")
-            binding.ivSlide.setImageDrawable(ColorDrawable(Color.argb(it.alpha, it.R, it.G, it.B)))
-            setBgColorBtnColor(it.alpha, it.R, it.G, it.B)
-            binding.btnBgcolor.text = UtilManager.rgbToHex(it.R, it.G, it.B)
-        }
-
-    }
-
-    private fun editColorRandom() {
-        val randomR = UtilManager.getRandomColor()[0]
-        val randomG = UtilManager.getRandomColor()[1]
-        val randomB = UtilManager.getRandomColor()[2]
-
-        slideManager.editSlideColor(nowSlideIndex, randomR, randomG, randomB)
-    }
-
-    private fun setBgColorBtnColor(alpha: Int, R: Int, G: Int, B: Int) {
-        binding.btnBgcolor.backgroundTintList =
-            ColorStateList.valueOf(Color.argb(alpha, R, G, B))
     }
 }

@@ -4,7 +4,6 @@ import kotlin.random.Random
 
 
 class UtilManager {
-
     companion object {
         fun generateID(length: Int): String {
             val charset = "abcdefghijklmnopqrstuvwsyz0123456789"
@@ -37,9 +36,6 @@ class UtilManager {
             } else {
                 (255 / 10) * mode
             }
-
         }
-
     }
-
 }
