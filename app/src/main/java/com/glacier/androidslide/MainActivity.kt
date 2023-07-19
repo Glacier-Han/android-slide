@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     fun init() {
         binding.ivSlide.setOnClickListener(this)
-        binding.mainView?.setOnClickListener(this)
+        binding.mainView.setOnClickListener(this)
         binding.btnBgcolor.setOnClickListener(this)
         binding.btnAlphaMinus.setOnClickListener(this)
         binding.btnAlphaPlus.setOnClickListener(this)
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     fun setObserver(){
         slideViewModel.nowAlpha.observe(this) {
-            binding.tvAlphaMonitor?.text = it.toString()
+            binding.tvAlphaMonitor.text = it.toString()
         }
 
         slideViewModel.nowSlide.observe(this){
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             }
 
             R.id.main_view -> {
-                binding.tvAlphaMonitor?.text = ""
+                binding.tvAlphaMonitor.text = ""
                 binding.btnBgcolor.text = ""
                 binding.ivSlide.background =
                     AppCompatResources.getDrawable(baseContext, R.drawable.border_null)
