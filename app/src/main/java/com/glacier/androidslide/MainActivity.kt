@@ -11,9 +11,12 @@ import android.view.View.OnClickListener
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import com.glacier.androidslide.databinding.ActivityMainBinding
+import com.glacier.androidslide.model.ImageSlide
+import com.glacier.androidslide.model.Slide
 import com.glacier.androidslide.util.Mode
 import com.glacier.androidslide.util.UtilManager
 import com.glacier.androidslide.model.SquareSlide
+import com.glacier.androidslide.util.SlideType
 import com.glacier.androidslide.viewmodel.SquareSlideViewModel
 
 class MainActivity : AppCompatActivity(), OnClickListener {
@@ -36,7 +39,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         binding.btnAlphaPlus.setOnClickListener(this)
 
         setObserver()
-        slideViewModel.setNewSlide()
+        slideViewModel.setNewSlide(slideType = SlideType.SQUARE)
     }
 
     fun setObserver() {
@@ -45,14 +48,23 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         }
     }
 
-    private fun setSlideView(slide: SquareSlide) {
+    private fun setSlideView(slide: Slide) {
         slide.let {
-            binding.ivSlide.setImageDrawable(ColorDrawable(Color.argb(it.alpha, it.R, it.G, it.B)))
-            binding.tvAlphaMonitor.text = slideViewModel.nowAlpha.value.toString()
-            binding.btnBgcolor.text = UtilManager.rgbToHex(it.R, it.G, it.B)
-            setBgColorBtnColor(it.alpha, it.R, it.G, it.B)
-        }
+            when(slide){
+                is SquareSlide -> {
+                    it as SquareSlide
+                    binding.ivSlide.setImageDrawable(ColorDrawable(Color.argb(it.alpha, it.R, it.G, it.B)))
+                    binding.btnBgcolor.text = UtilManager.rgbToHex(it.R, it.G, it.B)
+                    setBgColorBtnColor(it.alpha, it.R, it.G, it.B)
+                }
 
+                is ImageSlide -> {
+                    // TODO :: 추후 이미지 슬라이드 처리
+                }
+            }
+
+            binding.tvAlphaMonitor.text = slideViewModel.nowAlpha.value.toString()
+        }
     }
 
     private fun setBgColorBtnColor(alpha: Int, R: Int, G: Int, B: Int) {

@@ -1,13 +1,15 @@
 package com.glacier.androidslide
 
+import com.glacier.androidslide.model.Slide
 import com.glacier.androidslide.model.SquareSlide
 import com.glacier.androidslide.model.SquareSlideViewFactory
+import com.glacier.androidslide.util.SlideType
 
 class SlideManager() {
-    private val slideList: MutableList<SquareSlide> = mutableListOf()
+    private val slideList: MutableList<Slide> = mutableListOf()
 
-    fun createSlide(r: Int, g: Int, b: Int, alpha: Int): SquareSlide {
-        val newSlide = SquareSlideViewFactory.createItem(r, g, b, alpha)
+    fun createSlide(r: Int, g: Int, b: Int, alpha: Int, slideType: SlideType): Slide {
+        val newSlide = SquareSlideViewFactory.createItem(r, g, b, alpha, slideType)
         slideList.add(newSlide)
         return newSlide
     }
@@ -16,11 +18,11 @@ class SlideManager() {
         return slideList.size
     }
 
-    fun getAllSlides(): List<SquareSlide> {
+    fun getAllSlides(): List<Slide> {
         return slideList
     }
 
-    fun getSlideByIndex(index: Int): SquareSlide? {
+    fun getSlideByIndex(index: Int): Slide? {
         return if (slideList.size > 0) {
             slideList[index]
         } else {
@@ -28,11 +30,14 @@ class SlideManager() {
         }
     }
 
-    fun editSlideColor(index: Int, r: Int, g: Int, b: Int) {
+    fun editSquareSlideColor(index: Int, r: Int, g: Int, b: Int) {
         if (slideList.isNotEmpty()) {
-            slideList[index].R = r
-            slideList[index].G = g
-            slideList[index].B = b
+            val slide = slideList[index] as SquareSlide
+            with(slide) {
+                R = r
+                G = g
+                B = b
+            }
         }
     }
 
