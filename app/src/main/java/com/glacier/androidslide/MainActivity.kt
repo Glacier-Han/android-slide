@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     }
 
-    private fun editColorRandom(){
+    private fun editColorRandom() {
         val randomR = UtilManager.getRandomColor()[0]
         val randomG = UtilManager.getRandomColor()[1]
         val randomB = UtilManager.getRandomColor()[2]
@@ -103,6 +103,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         slideManager.editSlideColor(nowSlideIndex, randomR, randomG, randomB)
         setSlideView(nowSlideIndex)
     }
+
     private fun editAlpha(mode: Mode) {
         when (mode) {
             Mode.MINUS -> {
