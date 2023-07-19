@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     fun init() {
         binding.ivSlide.setOnClickListener(this)
-        binding.mainView?.setOnClickListener(this)
+        binding.mainView.setOnClickListener(this)
         binding.btnBgcolor.setOnClickListener(this)
         binding.btnAlphaMinus.setOnClickListener(this)
         binding.btnAlphaPlus.setOnClickListener(this)
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             }
 
             R.id.main_view -> {
-                binding.tvAlphaMonitor?.text = ""
+                binding.tvAlphaMonitor.text = ""
                 binding.btnBgcolor.text = ""
                 binding.ivSlide.background =
                     AppCompatResources.getDrawable(baseContext, R.drawable.border_null)
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                 )
             )
             setBgColorBtnColor(UtilManager.getAlphaMode(nowAlpha), slide.R, slide.G, slide.B)
-            binding.tvAlphaMonitor?.text = nowAlpha.toString()
+            binding.tvAlphaMonitor.text = nowAlpha.toString()
             binding.btnBgcolor.text =
                 UtilManager.rgbToHex(slide.R, slide.G, slide.B)
         }
@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                     nowAlpha -= 1
                     slideManager.editSlideAlpha(nowSlideIndex, UtilManager.getAlphaMode(nowAlpha))
                     setSlideView(nowSlideIndex)
-                    binding.tvAlphaMonitor?.text = nowAlpha.toString()
+                    binding.tvAlphaMonitor.text = nowAlpha.toString()
                 }
             }
 
@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                     nowAlpha += 1
                     slideManager.editSlideAlpha(nowSlideIndex, UtilManager.getAlphaMode(nowAlpha))
                     setSlideView(nowSlideIndex)
-                    binding.tvAlphaMonitor?.text = nowAlpha.toString()
+                    binding.tvAlphaMonitor.text = nowAlpha.toString()
                 }
             }
         }

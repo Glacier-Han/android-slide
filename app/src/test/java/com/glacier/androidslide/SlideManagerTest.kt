@@ -69,6 +69,7 @@ class SlideManagerTest {
 
     @Test
     fun editSlideColor() {
+
     }
 
     @Test
