@@ -32,8 +32,8 @@ class SlideManagerTest {
 
     @Test
     fun createSlide_RandomIdIsVaild_False() {
-        // 테스트를 위해 10000개 생성 후 각각 id가 다른지 비교
-        for (i in 0..10000) {
+        // 테스트를 위해 100000개 생성 후 각각 id가 다른지 비교
+        for (i in 0..100000) {
             slideManager.createSlide(
                 Random.nextInt(0, 255),
                 Random.nextInt(0, 255),
@@ -68,11 +68,22 @@ class SlideManagerTest {
     }
 
     @Test
-    fun editSlideColor() {
+    fun editSlideColor_Valid_True() {
+        slideManager.createSlide(205, 255, 200, 255)
+        slideManager.editSlideColor(0, 255, 200, 0)
 
+        val target = slideManager.getSlideByIndex(0)
+        assertEquals(target?.R, 255)
+        assertEquals(target?.G, 200)
+        assertEquals(target?.B, 0)
     }
 
     @Test
-    fun editSlideAlpha() {
+    fun editSlideAlpha_Valid_True() {
+        slideManager.createSlide(205, 255, 200, 255)
+        slideManager.editSlideAlpha(0, 125)
+
+        val target = slideManager.getSlideByIndex(0)
+        assertEquals(target?.alpha, 125)
     }
 }
