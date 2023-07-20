@@ -47,10 +47,10 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     private fun setSlideView(slide: SquareSlide) {
         slide.let {
-            binding.ivSlide.setImageDrawable(ColorDrawable(Color.argb(it.alpha, it.R, it.G, it.B)))
+            binding.ivSlide.setImageDrawable(ColorDrawable(Color.argb(it.alpha, it.r, it.g, it.b)))
             binding.tvAlphaMonitor.text = slideViewModel.nowAlpha.value.toString()
-            binding.btnBgcolor.text = UtilManager.rgbToHex(it.R, it.G, it.B)
-            setBgColorBtnColor(it.alpha, it.R, it.G, it.B)
+            binding.btnBgcolor.text = UtilManager.rgbToHex(it.r, it.g, it.b)
+            setBgColorBtnColor(it.alpha, it.r, it.g, it.b)
         }
 
     }
@@ -60,8 +60,8 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             ColorStateList.valueOf(Color.argb(alpha, R, G, B))
     }
 
-    override fun onClick(p0: View?) {
-        when (p0?.id) {
+    override fun onClick(view: View?) {
+        when (view?.id) {
             R.id.iv_slide -> {
                 slideViewModel.setNowSlideSelected(true)
                 binding.ivSlide.background =

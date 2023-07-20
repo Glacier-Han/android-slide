@@ -2,14 +2,14 @@ package com.glacier.androidslide.model
 
 data class SquareSlide(
     val id: String,
-    var side: Int,
-    var R: Int,
-    var G: Int,
-    var B: Int,
-    var alpha: Int,
-    var selected: Boolean = true
+    val side: Int,
+    val r: Int,
+    val g: Int,
+    val b: Int,
+    val alpha: Int,
+    val selected: Boolean = true
 ) {
     override fun toString(): String {
-        return "($id), Side:$side, R:$R, G:$G, B:$B, Alpha:$alpha, Selected:$selected"
+        return "($id), Side:$side, R:$r, G:$g, B:$b, Alpha:$alpha, Selected:$selected"
     }
 }
