@@ -14,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.glacier.androidslide.adapter.SlideAdapter
 import com.glacier.androidslide.databinding.ActivityMainBinding
@@ -23,6 +24,7 @@ import com.glacier.androidslide.model.Slide
 import com.glacier.androidslide.util.Mode
 import com.glacier.androidslide.util.UtilManager
 import com.glacier.androidslide.model.SquareSlide
+import com.glacier.androidslide.util.ItemMoveCallback
 import com.glacier.androidslide.util.SlideType
 import com.glacier.androidslide.viewmodel.SquareSlideViewModel
 
@@ -47,7 +49,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
         binding.btnAddSlide.setOnClickListener(this)
 
         setObserver()
-        slideViewModel.setNewSlide(slideType = SlideType.SQUARE)
+        //slideViewModel.setNewSlide(slideType = SlideType.SQUARE)
         setRecyclerView(slideViewModel.getSlides())
     }
 
@@ -69,7 +71,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
                     binding.ivSlide.setImageDrawable(
                         ColorDrawable(Color.argb(it.alpha, it.R, it.G, it.B))
                     )
-                    Log.d("TEST", UtilManager.getAlphaToMode(it.alpha).toString())
                     binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(it.alpha).toString()
                     binding.btnBgcolor.text = UtilManager.rgbToHex(it.R, it.G, it.B)
                     setBgColorBtnColor(it.alpha, it.R, it.G, it.B)
@@ -89,14 +90,16 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
     }
 
     private fun setRecyclerView(slides: List<Slide>) {
-        val slideAdapter = SlideAdapter(slides, this@MainActivity)
+        val slideAdapter = SlideAdapter(slides as MutableList<Slide>, this@MainActivity)
 
         with(binding.rvSlides) {
             adapter = slideAdapter
             layoutManager =
-                LinearLayoutManager(baseContext).apply {
-                    orientation = LinearLayoutManager.VERTICAL
-                }
+                LinearLayoutManager(baseContext)
+
+            val itemMoveCallback = ItemMoveCallback(slideAdapter)
+            val itemTouchHelper = ItemTouchHelper(itemMoveCallback)
+            itemTouchHelper.attachToRecyclerView(this)
         }
     }
 
@@ -179,7 +182,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
     }
 
     override fun onSlideSelected(position: Int, slide: Slide) {
-        Toast.makeText(applicationContext, "$position $slide", Toast.LENGTH_SHORT).show()
+        Log.d("DBG::SELECTED", "$position $slide")
         slideViewModel.setSlideIndex(position)
     }
 }

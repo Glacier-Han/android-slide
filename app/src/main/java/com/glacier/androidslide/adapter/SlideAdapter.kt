@@ -1,18 +1,26 @@
 package com.glacier.androidslide.adapter
 
+import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.glacier.androidslide.databinding.ItemSlideImageBinding
 import com.glacier.androidslide.databinding.ItemSlideSquareBinding
+import com.glacier.androidslide.listener.ItemMoveListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
 import com.glacier.androidslide.model.ImageSlide
 import com.glacier.androidslide.model.Slide
 import com.glacier.androidslide.model.SquareSlide
 import com.glacier.androidslide.util.SlideType
+import java.util.Collections
 
-class SlideAdapter(private val slides: List<Slide>, private val listener: OnSlideSelectedListener) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SlideAdapter(
+    private val slides: MutableList<Slide>,
+    private val listener: OnSlideSelectedListener
+) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemMoveListener {
 
     companion object {
         private const val VIEW_TYPE_SQUARE = 0
@@ -45,6 +53,7 @@ class SlideAdapter(private val slides: List<Slide>, private val listener: OnSlid
                 val squareSlide = slide as SquareSlide
                 holder.bind(squareSlide)
             }
+
             is ImageSlideViewHolder -> {
                 val imageSlide = slide as ImageSlide
                 holder.bind(imageSlide)
@@ -64,14 +73,29 @@ class SlideAdapter(private val slides: List<Slide>, private val listener: OnSlid
         }
     }
 
-    inner class SquareSlideViewHolder(private val binding: ItemSlideSquareBinding) : RecyclerView.ViewHolder(binding.root) {
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+        val slide = slides[fromPosition]
+        slides.removeAt(fromPosition)
+        slides.add(toPosition, slide)
+
+        Log.d("DTEST","TEST")
+        notifyItemMoved(fromPosition, toPosition)
+        notifyItemChanged(fromPosition)
+        notifyItemChanged(toPosition)
+        return true
+    }
+
+    inner class SquareSlideViewHolder(private val binding: ItemSlideSquareBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(squareSlide: SquareSlide) {
             // todo: 정사각형 슬라이드 처리하기
             binding.tvSlideNumber.text = "${adapterPosition + 1}"
         }
     }
 
-    inner class ImageSlideViewHolder(private val binding: ItemSlideImageBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ImageSlideViewHolder(private val binding: ItemSlideImageBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(imageSlide: ImageSlide) {
             // todo: 이미지 슬라이드 처리하기
             binding.tvSlideNumber.text = "${adapterPosition + 1}"
