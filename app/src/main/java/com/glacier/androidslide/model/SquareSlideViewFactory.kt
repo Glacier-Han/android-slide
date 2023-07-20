@@ -11,7 +11,7 @@ object SquareSlideViewFactory : SquareSlideFactory {
 
         return when(slideType){
             SlideType.SQUARE -> SquareSlide(id, side, alpha, true, r, g, b)
-            SlideType.IMAGE -> ImageSlide(id, side, alpha, true, "")
+            SlideType.IMAGE -> ImageSlide(id, side, alpha, true, ByteArray(0))
         }
     }
 }
