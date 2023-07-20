@@ -9,12 +9,14 @@ import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.activity.viewModels
+
 import androidx.appcompat.content.res.AppCompatResources
 import com.glacier.androidslide.databinding.ActivityMainBinding
 import com.glacier.androidslide.util.Mode
 import com.glacier.androidslide.util.UtilManager
 import com.glacier.androidslide.model.SquareSlide
 import com.glacier.androidslide.viewmodel.SquareSlideViewModel
+
 
 class MainActivity : AppCompatActivity(), OnClickListener {
 
@@ -64,12 +66,14 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         when (view?.id) {
             R.id.iv_slide -> {
                 slideViewModel.setNowSlideSelected(true)
+
                 binding.ivSlide.background =
                     AppCompatResources.getDrawable(baseContext, R.drawable.border_black)
             }
 
             R.id.main_view -> {
                 slideViewModel.setNowSlideSelected(false)
+
                 binding.tvAlphaMonitor.text = ""
                 binding.btnBgcolor.text = ""
                 binding.ivSlide.background =
@@ -88,5 +92,6 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                 slideViewModel.editAlpha(Mode.PLUS)
             }
         }
+
     }
 }

@@ -24,3 +24,4 @@ Android 학습 프로젝트 #2
 > - ViewModel에서는 LiveData로 각 속성들을 관리하고 있다. 
 > - 배경색이나 알파값 변경등의 명령을 MainActivity에서 ViewModel로 전달하면, 뷰모델은 각 로직을 처리한 후 nowSlide에 변경사항을 적용한 SquareSlide 객체를 갱신한다.
 > - MainActivity에서는 ViewModel의 nowSlide를 observe 하고 있다가 값 변경을 감지하면 UI를 업데이트한다.
+
