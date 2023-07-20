@@ -122,6 +122,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
                 binding.btnBgcolor.text = "IMAGE"
                 binding.btnBgcolor.isEnabled = false
                 setBgColorBtnColor(slide.alpha, 200, 200, 200)
+
             }
         }
     }

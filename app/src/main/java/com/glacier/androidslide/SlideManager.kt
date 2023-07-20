@@ -38,9 +38,15 @@ class SlideManager() {
     fun editSlideAlpha(index: Int, alpha: Int) {
         if (slideList.isNotEmpty()) {
             val slide = slideList[index]
+<<<<<<< HEAD
             if (slide is SquareSlide) {
                 slideList[index] = slide.copy(alpha = alpha)
             } else if (slide is ImageSlide) {
+=======
+            if(slide is SquareSlide){
+                slideList[index] = slide.copy(alpha = alpha)
+            }else if(slide is ImageSlide){
+>>>>>>> ffc203a (fix: 저번 브랜치 이슈 수정사항 적용)
                 slideList[index] = slide.copy(alpha = alpha)
             }
         }
@@ -49,6 +55,7 @@ class SlideManager() {
     fun setNowSlideSelected(index: Int, selected: Boolean) {
         if (slideList.isNotEmpty()) {
             val slide = slideList[index]
+<<<<<<< HEAD
             if (slide is SquareSlide) {
                 slideList[index] = slide.copy(selected = selected)
             } else if (slide is ImageSlide) {
@@ -61,6 +68,13 @@ class SlideManager() {
         if (slideList.isNotEmpty()) {
             val slide = slideList[index] as ImageSlide
             slideList[index] = slide.copy(image = image)
+=======
+            if(slide is SquareSlide){
+                slideList[index] = slide.copy(selected = selected)
+            }else if(slide is ImageSlide){
+                slideList[index] = slide.copy(selected = selected)
+            }
+>>>>>>> ffc203a (fix: 저번 브랜치 이슈 수정사항 적용)
         }
     }
 }
