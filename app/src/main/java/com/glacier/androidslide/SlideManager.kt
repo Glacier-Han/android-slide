@@ -1,5 +1,6 @@
 package com.glacier.androidslide
 
+import com.glacier.androidslide.model.ImageSlide
 import com.glacier.androidslide.model.Slide
 import com.glacier.androidslide.model.SquareSlide
 import com.glacier.androidslide.model.SquareSlideViewFactory
@@ -33,23 +34,30 @@ class SlideManager() {
     fun editSquareSlideColor(index: Int, r: Int, g: Int, b: Int) {
         if (slideList.isNotEmpty()) {
             val slide = slideList[index] as SquareSlide
-            with(slide) {
-                R = r
-                G = g
-                B = b
-            }
+            val updatedSlide = slide.copy(r = r, g = g, b = b)
+            slideList[index] = updatedSlide
         }
     }
 
     fun editSlideAlpha(index: Int, alpha: Int) {
         if (slideList.isNotEmpty()) {
-            slideList[index].alpha = alpha
+            val slide = slideList[index]
+            if(slide is SquareSlide){
+                slideList[index] = slide.copy(alpha = alpha)
+            }else if(slide is ImageSlide){
+                slideList[index] = slide.copy(alpha = alpha)
+            }
         }
     }
 
     fun setNowSlideSelected(index: Int, selected: Boolean) {
         if (slideList.isNotEmpty()) {
-            slideList[index].selected = selected
+            val slide = slideList[index]
+            if(slide is SquareSlide){
+                slideList[index] = slide.copy(selected = selected)
+            }else if(slide is ImageSlide){
+                slideList[index] = slide.copy(selected = selected)
+            }
         }
     }
 }

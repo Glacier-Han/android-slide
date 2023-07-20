@@ -69,11 +69,11 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
                 is SquareSlide -> {
                     it as SquareSlide
                     binding.ivSlide.setImageDrawable(
-                        ColorDrawable(Color.argb(it.alpha, it.R, it.G, it.B))
+                        ColorDrawable(Color.argb(it.alpha, it.r, it.g ,it.b))
                     )
                     binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(it.alpha).toString()
-                    binding.btnBgcolor.text = UtilManager.rgbToHex(it.R, it.G, it.B)
-                    setBgColorBtnColor(it.alpha, it.R, it.G, it.B)
+                    binding.btnBgcolor.text = UtilManager.rgbToHex(it.r, it.g ,it.b)
+                    setBgColorBtnColor(it.alpha, it.r, it.g ,it.b)
                 }
 
                 is ImageSlide -> {
