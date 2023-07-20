@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -26,12 +25,12 @@ import com.glacier.androidslide.util.UtilManager
 import com.glacier.androidslide.model.SquareSlide
 import com.glacier.androidslide.util.ItemMoveCallback
 import com.glacier.androidslide.util.SlideType
-import com.glacier.androidslide.viewmodel.SquareSlideViewModel
+import com.glacier.androidslide.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListener {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val slideViewModel: SquareSlideViewModel by viewModels()
+    private val slideViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
