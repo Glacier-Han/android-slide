@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
 
     fun setObserver() {
         slideViewModel.nowSlide.observe(this) {
+            Log.d("TEST", it.alpha.toString())
             setSlideView(it)
         }
 

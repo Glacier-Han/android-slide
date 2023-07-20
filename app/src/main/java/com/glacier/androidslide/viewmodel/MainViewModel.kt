@@ -21,8 +21,8 @@ class MainViewModel : ViewModel() {
     val slides = _slides
 
 
-    fun getNowSlide(): Slide? {
-        return slideManager.getSlideByIndex(nowSlideIndex)
+    fun getNowSlide() {
+        _nowSlide.value = slideManager.getSlideByIndex(nowSlideIndex)
     }
 
     fun getSlideWithIndex(index: Int): Slide? {
@@ -83,6 +83,7 @@ class MainViewModel : ViewModel() {
             UtilManager.getRandomColor()[1],
             UtilManager.getRandomColor()[2]
         )
+        slides.postValue(slides.value)
         getNowSlide()
 
     }
