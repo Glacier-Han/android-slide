@@ -24,11 +24,7 @@ class SlideManager() {
     }
 
     fun getSlideByIndex(index: Int): Slide? {
-        return if (slideList.size > 0) {
-            slideList[index]
-        } else {
-            null
-        }
+        return slideList.getOrNull(index)
     }
 
     fun editSquareSlideColor(index: Int, r: Int, g: Int, b: Int) {

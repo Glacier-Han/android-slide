@@ -24,8 +24,7 @@ class SquareSlideViewModel : ViewModel() {
 
 
     fun getNowSlide(): Slide? {
-        _nowSlide.value = slideManager.getSlideByIndex(nowSlideIndex)
-        return _nowSlide.value
+        return slideManager.getSlideByIndex(nowSlideIndex)
     }
 
     fun getSlideWithIndex(index: Int): Slide? {
