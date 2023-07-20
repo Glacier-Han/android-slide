@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.3" />
 
     <TextView
         android:id="@+id/tv_slide_number"
@@ -22,7 +22,7 @@
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/gl_start"
+        app:layout_constraintEnd_toStartOf="@id/main_view"
         tool:text="1" />
 
 
@@ -30,11 +30,10 @@
         android:id="@+id/main_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="10dp"
         android:background="@drawable/bg_radius_outlined"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_slide_number"
+        app:layout_constraintStart_toEndOf="@id/gl_start"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView

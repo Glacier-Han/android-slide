@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
             }
 
             R.id.btn_add_slide -> {
-                slideViewModel.setNewSlide(SlideType.SQUARE) // 추후 랜덤으로 변경
+                slideViewModel.setNewSlide(SlideType.values().random()) // 추후 랜덤으로 변경
             }
         }
     }
