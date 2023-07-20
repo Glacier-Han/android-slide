@@ -11,6 +11,7 @@ import android.view.View.OnClickListener
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.viewModels
+
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -29,6 +30,7 @@ import com.glacier.androidslide.util.SlideType
 import com.glacier.androidslide.viewmodel.SquareSlideViewModel
 
 class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListener {
+
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val slideViewModel: SquareSlideViewModel by viewModels()
@@ -142,17 +144,19 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
 
         constraintSet.applyTo(binding.rootView)
     }
-
+    
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.iv_slide -> {
                 slideViewModel.setNowSlideSelected(true)
+
                 binding.ivSlide.background =
                     AppCompatResources.getDrawable(baseContext, R.drawable.border_black)
             }
 
             R.id.main_view -> {
                 slideViewModel.setNowSlideSelected(false)
+
                 binding.tvAlphaMonitor.text = ""
                 binding.btnBgcolor.text = ""
                 binding.ivSlide.background =
@@ -175,6 +179,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
                 slideViewModel.setNewSlide(SlideType.SQUARE) // 추후 랜덤으로 변경
             }
         }
+
     }
 
     override fun onSlideSelected(position: Int, slide: Slide) {
