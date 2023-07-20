@@ -4,10 +4,10 @@ import com.glacier.androidslide.util.SlideType
 
 data class ImageSlide(
     override val id: String,
-    override var side: Int,
-    override var alpha: Int,
-    override var selected: Boolean,
-    var image: ByteArray,
+    override val side: Int,
+    override val alpha: Int,
+    override val selected: Boolean,
+    val image: ByteArray,
 ) : Slide {
     override val slideType: SlideType = SlideType.IMAGE
     override fun toString(): String {

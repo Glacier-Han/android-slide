@@ -5,7 +5,7 @@ import com.glacier.androidslide.util.SlideType
 interface Slide {
     val slideType: SlideType
     val id: String
-    var side: Int
-    var alpha: Int
-    var selected: Boolean
+    val side: Int
+    val alpha: Int
+    val selected: Boolean
 }

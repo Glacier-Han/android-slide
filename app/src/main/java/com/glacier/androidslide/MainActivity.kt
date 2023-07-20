@@ -69,23 +69,19 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
     }
 
     private fun setSlideView(slide: Slide) {
-        slide.let {
-            when (slide) {
-                is SquareSlide -> {
-                    it as SquareSlide
-                    binding.ivSlide.setImageDrawable(
-                        ColorDrawable(Color.argb(it.alpha, it.R, it.G, it.B))
-                    )
-                    binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(it.alpha).toString()
-                    binding.btnBgcolor.text = UtilManager.rgbToHex(it.R, it.G, it.B)
-                    setBgColorBtnColor(it.alpha, it.R, it.G, it.B)
-                }
-
-                is ImageSlide -> {
-                    // TODO :: 추후 이미지 슬라이드 처리
-                }
+        when (slide) {
+            is SquareSlide -> {
+                binding.ivSlide.setImageDrawable(
+                    ColorDrawable(Color.argb(slide.alpha, slide.r, slide.g ,slide.b))
+                )
+                binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(slide.alpha).toString()
+                binding.btnBgcolor.text = UtilManager.rgbToHex(slide.r, slide.g ,slide.b)
+                setBgColorBtnColor(slide.alpha, slide.r, slide.g ,slide.b)
             }
 
+            is ImageSlide -> {
+                // TODO :: 추후 이미지 슬라이드 처리
+            }
         }
     }
 
@@ -152,8 +148,8 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
         constraintSet.applyTo(binding.rootView)
     }
 
-    override fun onClick(p0: View?) {
-        when (p0?.id) {
+    override fun onClick(view: View?) {
+        when (view?.id) {
             R.id.iv_slide -> {
                 slideViewModel.setNowSlideSelected(true)
                 binding.ivSlide.background =
