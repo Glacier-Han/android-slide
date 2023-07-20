@@ -69,20 +69,20 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
     }
 
     private fun setSlideView(slide: Slide) {
-            when (slide) {
-                is SquareSlide -> {
-                    binding.ivSlide.setImageDrawable(
-                        ColorDrawable(Color.argb(slide.alpha, slide.r, slide.g ,slide.b))
-                    )
-                    binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(slide.alpha).toString()
-                    binding.btnBgcolor.text = UtilManager.rgbToHex(slide.r, slide.g ,slide.b)
-                    setBgColorBtnColor(slide.alpha, slide.r, slide.g ,slide.b)
-                }
-
-                is ImageSlide -> {
-                    // TODO :: 추후 이미지 슬라이드 처리
-                }
+        when (slide) {
+            is SquareSlide -> {
+                binding.ivSlide.setImageDrawable(
+                    ColorDrawable(Color.argb(slide.alpha, slide.r, slide.g, slide.b))
+                )
+                binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(slide.alpha).toString()
+                binding.btnBgcolor.text = UtilManager.rgbToHex(slide.r, slide.g, slide.b)
+                setBgColorBtnColor(slide.alpha, slide.r, slide.g, slide.b)
             }
+
+            is ImageSlide -> {
+                // TODO :: 추후 이미지 슬라이드 처리
+            }
+        }
     }
 
     private fun setBgColorBtnColor(alpha: Int, R: Int, G: Int, B: Int) {
@@ -91,7 +91,8 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
     }
 
     private fun setRecyclerView(slides: List<Slide>) {
-        val slideAdapter = SlideAdapter(slides as MutableList<Slide>, this@MainActivity, this@MainActivity)
+        val slideAdapter =
+            SlideAdapter(slides as MutableList<Slide>, this@MainActivity, this@MainActivity)
 
         with(binding.rvSlides) {
             adapter = slideAdapter

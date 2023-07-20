@@ -67,6 +67,7 @@ class MainViewModel : ViewModel() {
         }
 
         getNowSlide()
+        getSlides()
     }
 
     fun setNowSlideSelected(selected: Boolean) {
