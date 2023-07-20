@@ -16,29 +16,35 @@ class SlideManager() {
         return slideList.size
     }
 
-    fun getAllSlides(): List<SquareSlide>{
+    fun getAllSlides(): List<SquareSlide> {
         return slideList
     }
 
     fun getSlideByIndex(index: Int): SquareSlide? {
-        return if (slideList.size > 0) {
-            slideList[index]
-        } else {
-            null
-        }
+        return slideList.getOrElse(index) { null }
     }
 
     fun editSlideColor(index: Int, r: Int, g: Int, b: Int) {
         if (slideList.isNotEmpty()) {
-            slideList[index].r = r
-            slideList[index].g = g
-            slideList[index].b = b
+            val slide = slideList[index]
+            val updatedSlide = slide.copy(r = r, g = g, b = b)
+            slideList[index] = updatedSlide
         }
     }
 
     fun editSlideAlpha(index: Int, alpha: Int) {
         if (slideList.isNotEmpty()) {
-            slideList[index].alpha = alpha
+            val slide = slideList[index]
+            val updatedSlide = slide.copy(alpha = alpha)
+            slideList[index] = updatedSlide
+        }
+    }
+
+    fun setNowSlideSelected(index: Int, selected: Boolean) {
+        if (slideList.isNotEmpty()) {
+            val slide = slideList[index]
+            val updatedSlide = slide.copy(selected = selected)
+            slideList[index] = updatedSlide
         }
     }
 }
