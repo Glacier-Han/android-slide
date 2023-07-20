@@ -1,8 +1,10 @@
 package com.glacier.androidslide
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +19,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.glacier.androidslide.adapter.SlideAdapter
 import com.glacier.androidslide.databinding.ActivityMainBinding
+import com.glacier.androidslide.databinding.ItemSlideImageBinding
+import com.glacier.androidslide.databinding.ItemSlideSquareBinding
+import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
 import com.glacier.androidslide.model.ImageSlide
 import com.glacier.androidslide.model.Slide
@@ -27,7 +32,8 @@ import com.glacier.androidslide.util.ItemMoveCallback
 import com.glacier.androidslide.util.SlideType
 import com.glacier.androidslide.viewmodel.MainViewModel
 
-class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListener {
+class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListener,
+    OnSlideDoubleClickListener {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val slideViewModel: MainViewModel by viewModels()
@@ -85,7 +91,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
     }
 
     private fun setRecyclerView(slides: List<Slide>) {
-        val slideAdapter = SlideAdapter(slides as MutableList<Slide>, this@MainActivity)
+        val slideAdapter = SlideAdapter(slides as MutableList<Slide>, this@MainActivity, this@MainActivity)
 
         with(binding.rvSlides) {
             adapter = slideAdapter
@@ -176,8 +182,22 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
         }
     }
 
-    override fun onSlideSelected(position: Int, slide: Slide) {
+    override fun onSlideSelected(slideType: SlideType, position: Int, slide: Slide) {
         Log.d("DBG::SELECTED", "$position $slide")
+        when (slideType) {
+            SlideType.SQUARE -> {
+
+            }
+
+            SlideType.IMAGE -> {
+
+            }
+        }
         slideViewModel.setSlideIndex(position)
     }
+
+    override fun onSlideDoubleClicked(position: Int, slide: Slide) {
+    }
+
+
 }

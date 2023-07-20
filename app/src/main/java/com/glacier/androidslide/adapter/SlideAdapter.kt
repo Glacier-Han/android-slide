@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
+import android.view.GestureDetector
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
@@ -13,6 +16,7 @@ import com.glacier.androidslide.R
 import com.glacier.androidslide.databinding.ItemSlideImageBinding
 import com.glacier.androidslide.databinding.ItemSlideSquareBinding
 import com.glacier.androidslide.listener.ItemMoveListener
+import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
 import com.glacier.androidslide.model.ImageSlide
 import com.glacier.androidslide.model.Slide
@@ -21,7 +25,8 @@ import com.glacier.androidslide.util.SlideType
 
 class SlideAdapter(
     private val slides: MutableList<Slide>,
-    private val listener: OnSlideSelectedListener
+    private val listener: OnSlideSelectedListener,
+    private val doubleClickListener: OnSlideDoubleClickListener
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemMoveListener {
 
@@ -46,10 +51,6 @@ class SlideAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val slide = slides[position]
-
-        holder.itemView.setOnClickListener {
-            listener.onSlideSelected(position, slide)
-        }
 
         holder.itemView.setOnLongClickListener {
             val context = holder.itemView.context
@@ -163,6 +164,11 @@ class SlideAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(squareSlide: SquareSlide) {
             // todo: 정사각형 슬라이드 처리하기
+
+            itemView.setOnClickListener {
+                listener.onSlideSelected(SlideType.SQUARE, adapterPosition, squareSlide)
+            }
+
             binding.tvSlideNumber.text = "${adapterPosition + 1}"
             binding.ivSlide.setColorFilter(
                 Color.argb(
@@ -179,6 +185,25 @@ class SlideAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(imageSlide: ImageSlide) {
             // todo: 이미지 슬라이드 처리하기
+
+            itemView.setOnClickListener {
+                listener.onSlideSelected(SlideType.IMAGE, adapterPosition, imageSlide)
+            }
+
+            itemView.setOnTouchListener(object : View.OnTouchListener {
+                private val gestureDetector =
+                    GestureDetector(itemView.context, object : GestureDetector.SimpleOnGestureListener() {
+                        override fun onDoubleTap(e: MotionEvent): Boolean {
+                            doubleClickListener.onSlideDoubleClicked(adapterPosition, slides[adapterPosition])
+                            return true
+                        }
+                    })
+
+                override fun onTouch(v: View?, event: MotionEvent): Boolean {
+                    return gestureDetector.onTouchEvent(event)
+                }
+            })
+
             binding.tvSlideNumber.text = "${adapterPosition + 1}"
         }
     }
