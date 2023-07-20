@@ -84,13 +84,13 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         slide?.let {
             binding.ivSlide.setImageDrawable(
                 ColorDrawable(
-                    Color.argb(UtilManager.getAlphaMode(nowAlpha), slide.R, slide.G, slide.B)
+                    Color.argb(UtilManager.getAlphaMode(nowAlpha), slide.r, slide.g, slide.b)
                 )
             )
-            setBgColorBtnColor(UtilManager.getAlphaMode(nowAlpha), slide.R, slide.G, slide.B)
+            setBgColorBtnColor(UtilManager.getAlphaMode(nowAlpha), slide.r, slide.g, slide.b)
             binding.tvAlphaMonitor.text = nowAlpha.toString()
             binding.btnBgcolor.text =
-                UtilManager.rgbToHex(slide.R, slide.G, slide.B)
+                UtilManager.rgbToHex(slide.r, slide.g, slide.b)
         }
 
     }

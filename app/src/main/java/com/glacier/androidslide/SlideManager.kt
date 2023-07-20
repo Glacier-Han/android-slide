@@ -30,9 +30,9 @@ class SlideManager() {
 
     fun editSlideColor(index: Int, r: Int, g: Int, b: Int) {
         if (slideList.isNotEmpty()) {
-            slideList[index].R = r
-            slideList[index].G = g
-            slideList[index].B = b
+            slideList[index].r = r
+            slideList[index].g = g
+            slideList[index].b = b
         }
     }
 
