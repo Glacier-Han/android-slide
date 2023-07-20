@@ -1,11 +1,15 @@
 package com.glacier.androidslide.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
+import com.glacier.androidslide.R
 import com.glacier.androidslide.databinding.ItemSlideImageBinding
 import com.glacier.androidslide.databinding.ItemSlideSquareBinding
 import com.glacier.androidslide.listener.ItemMoveListener
@@ -14,7 +18,6 @@ import com.glacier.androidslide.model.ImageSlide
 import com.glacier.androidslide.model.Slide
 import com.glacier.androidslide.model.SquareSlide
 import com.glacier.androidslide.util.SlideType
-import java.util.Collections
 
 class SlideAdapter(
     private val slides: MutableList<Slide>,
@@ -48,6 +51,76 @@ class SlideAdapter(
             listener.onSlideSelected(position, slide)
         }
 
+        holder.itemView.setOnLongClickListener {
+            val context = holder.itemView.context
+            PopupMenu(context, holder.itemView).apply {
+                menuInflater.inflate(R.menu.slide_item_menu, menu)
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.menu_hard_back -> {
+                            showToast(
+                                context,
+                                context.getString(R.string.menu_toast_hard_back)
+                            )
+
+                            val lastPosition = slides.size - 1
+                            if (position < lastPosition) {
+                                val slideToMove = slides.removeAt(position)
+                                slides.add(slideToMove)
+                                notifyItemMoved(position, lastPosition)
+                                notifyItemRangeChanged(position, slides.size - position)
+                            }
+                            true
+                        }
+
+                        R.id.menu_back -> {
+                            showToast(context, context.getString(R.string.menu_toast_back))
+
+                            val nextPosition = position + 1
+                            if (position < slides.size - 1) {
+                                val slideToMove = slides.removeAt(position)
+                                slides.add(nextPosition, slideToMove)
+                                notifyItemMoved(position, nextPosition)
+                                notifyItemRangeChanged(position - 1, 3)
+                            }
+                            true
+                        }
+
+                        R.id.menu_hard_front -> {
+                            showToast(context, context.getString(R.string.menu_toast_hard_front))
+
+                            if (position > 0) {
+                                val slideToMove = slides.removeAt(position)
+                                slides.add(0, slideToMove)
+                                notifyItemMoved(position, 0)
+                                notifyItemRangeChanged(0, position + 1)
+                            }
+                            true
+                        }
+
+                        R.id.menu_front -> {
+                            showToast(context, context.getString(R.string.menu_toast_front))
+
+                            if (position > 0) {
+                                val prevPosition = position - 1
+                                val slideToMove = slides.removeAt(position)
+                                slides.add(prevPosition, slideToMove)
+                                notifyItemMoved(position, prevPosition)
+                                notifyItemRangeChanged(prevPosition, 3)
+                            }
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+                show()
+            }
+
+            return@setOnLongClickListener true
+        }
+
+
         when (holder) {
             is SquareSlideViewHolder -> {
                 val squareSlide = slide as SquareSlide
@@ -79,7 +152,7 @@ class SlideAdapter(
         slides.removeAt(fromPosition)
         slides.add(toPosition, slide)
 
-        Log.d("DTEST","TEST")
+        Log.d("DTEST", "TEST")
         notifyItemMoved(fromPosition, toPosition)
         notifyItemChanged(fromPosition)
         notifyItemChanged(toPosition)
@@ -91,6 +164,14 @@ class SlideAdapter(
         fun bind(squareSlide: SquareSlide) {
             // todo: 정사각형 슬라이드 처리하기
             binding.tvSlideNumber.text = "${adapterPosition + 1}"
+            binding.ivSlide.setColorFilter(
+                Color.argb(
+                    squareSlide.alpha,
+                    squareSlide.R,
+                    squareSlide.G,
+                    squareSlide.B
+                )
+            )
         }
     }
 
@@ -100,5 +181,9 @@ class SlideAdapter(
             // todo: 이미지 슬라이드 처리하기
             binding.tvSlideNumber.text = "${adapterPosition + 1}"
         }
+    }
+
+    fun showToast(context: Context, text: String) {
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 }
