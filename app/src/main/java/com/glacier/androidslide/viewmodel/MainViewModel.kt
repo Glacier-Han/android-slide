@@ -1,16 +1,14 @@
 package com.glacier.androidslide.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.glacier.androidslide.SlideManager
 import com.glacier.androidslide.model.Slide
-import com.glacier.androidslide.model.SquareSlide
 import com.glacier.androidslide.util.Mode
 import com.glacier.androidslide.util.SlideType
 import com.glacier.androidslide.util.UtilManager
 
-class SquareSlideViewModel : ViewModel() {
+class MainViewModel : ViewModel() {
     private val slideManager = SlideManager()
 
     var nowAlpha: Int = 10
