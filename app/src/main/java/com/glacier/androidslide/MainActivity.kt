@@ -143,8 +143,8 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
         constraintSet.applyTo(binding.rootView)
     }
 
-    override fun onClick(p0: View?) {
-        when (p0?.id) {
+    override fun onClick(view: View?) {
+        when (view?.id) {
             R.id.iv_slide -> {
                 slideViewModel.setNowSlideSelected(true)
                 binding.ivSlide.background =
