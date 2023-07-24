@@ -10,7 +10,7 @@ object SquareSlideViewFactory : SquareSlideFactory {
         val side = Random.nextInt(0, 1000)
 
         return when(slideType){
-            SlideType.SQUARE -> SquareSlide(id, side, alpha, true, r, g, b)
+            SlideType.SQUARE -> SquareSlide(id, side, alpha, true, SlideColor(r, g, b))
             SlideType.IMAGE -> ImageSlide(id, side, alpha, true, ByteArray(0))
         }
     }

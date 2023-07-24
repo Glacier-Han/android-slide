@@ -101,13 +101,14 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
                     applyTo(binding.rootView)
                 }
 
+                val sColor = slide.color
                 binding.ivSlide.setImageDrawable(
-                    ColorDrawable(Color.argb(slide.alpha, slide.r, slide.g, slide.b))
+                    ColorDrawable(Color.argb(slide.alpha, sColor.r, sColor.g, sColor.b))
                 )
                 binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(slide.alpha).toString()
-                binding.btnBgcolor.text = UtilManager.rgbToHex(slide.r, slide.g, slide.b)
+                binding.btnBgcolor.text = UtilManager.rgbToHex(sColor.r, sColor.g, sColor.b)
                 binding.btnBgcolor.isEnabled = true
-                setBgColorBtnColor(slide.alpha, slide.r, slide.g, slide.b)
+                setBgColorBtnColor(slide.alpha, sColor.r, sColor.g, sColor.b)
             }
 
             is ImageSlide -> {
