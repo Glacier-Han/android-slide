@@ -4,5 +4,5 @@ import com.glacier.androidslide.model.Slide
 import com.glacier.androidslide.util.SlideType
 
 interface OnSlideSelectedListener {
-    fun onSlideSelected(slideType: SlideType, position: Int, slide: Slide)
+    fun onSlideSelected(position: Int, slide: Slide)
 }
