@@ -48,12 +48,14 @@ import com.glacier.androidslide.util.SlideType
 import com.glacier.androidslide.viewmodel.MainViewModel
 import java.io.IOException
 
-class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListener,
+class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListener,
+    OnSlideSelectedListener,
     OnSlideDoubleClickListener {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val slideViewModel: MainViewModel by viewModels()
     private var imgSelectedPosition = 0
+    private var observedListSize = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +71,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
         binding.btnAlphaMinus.setOnClickListener(this)
         binding.btnAlphaPlus.setOnClickListener(this)
         binding.btnAddSlide.setOnClickListener(this)
+        binding.btnAddSlide.setOnLongClickListener(this)
 
         setObserver()
         //slideViewModel.setNewSlide(slideType = SlideType.SQUARE)
@@ -81,7 +84,13 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
         }
 
         slideViewModel.slides.observe(this) {
-            setRecyclerView(it)
+            if(it.size != observedListSize){
+                binding.rvSlides.adapter?.notifyItemInserted(it.lastIndex)
+                binding.rvSlides.scrollToPosition(it.lastIndex)
+            } else {
+                binding.rvSlides.adapter?.notifyDataSetChanged()
+            }
+            observedListSize = it.size
         }
     }
 
@@ -116,8 +125,12 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
                     applyTo(binding.rootView)
                 }
 
-                Glide.with(applicationContext).load(slide.image).error(R.drawable.outline_image_24)
+
+                Glide.with(applicationContext).load(slide.image)
+                    .error(R.drawable.outline_image_24)
                     .into(binding.ivSlide)
+
+
 
                 binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(slide.alpha).toString()
                 binding.btnBgcolor.text = "IMAGE"
@@ -232,10 +245,22 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
         }
 
         val intent = Intent(Intent.ACTION_PICK).apply {
-            setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+            type = "image/*"
+            action = Intent.ACTION_GET_CONTENT
+//            setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
         }
         imgSelectedPosition = position
         resultLauncher.launch(intent)
+    }
+
+    override fun onLongClick(view: View?): Boolean {
+        when (view?.id) {
+            R.id.btn_add_slide -> {
+                Log.d("DBG::RETROFIT", "sended")
+                slideViewModel.getJsonSlides()
+            }
+        }
+        return true
     }
 
 }
