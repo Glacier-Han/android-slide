@@ -47,6 +47,7 @@ import com.glacier.androidslide.model.SquareSlide
 import com.glacier.androidslide.util.ItemMoveCallback
 import com.glacier.androidslide.util.SlideType
 import com.glacier.androidslide.viewmodel.MainViewModel
+import jp.wasabeef.glide.transformations.ColorFilterTransformation
 import java.io.IOException
 
 class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListener,
@@ -127,12 +128,10 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
                     applyTo(binding.rootView)
                 }
 
-
                 Glide.with(applicationContext).load(slide.image)
+                    .transform(ColorFilterTransformation(Color.argb(255 - slide.alpha, 255, 255, 255)))
                     .error(R.drawable.outline_image_24)
                     .into(binding.ivSlide)
-
-
 
                 binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(slide.alpha).toString()
                 binding.btnBgcolor.text = "IMAGE"
