@@ -3,8 +3,6 @@ package com.glacier.androidslide.viewmodel
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide
 import com.glacier.androidslide.SlideManager
 import com.glacier.androidslide.api.JsonSlideApi
 import com.glacier.androidslide.api.RetrofitInstance
@@ -19,10 +17,6 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
-import java.net.HttpURLConnection
-import java.net.URL
 
 class MainViewModel : ViewModel() {
     private val slideManager = SlideManager()

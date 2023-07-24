@@ -1,7 +1,6 @@
 package com.glacier.androidslide.model
 
 import com.glacier.androidslide.util.SlideType
-import com.google.gson.annotations.SerializedName
 
 data class ImageSlide(
     override val id: String,

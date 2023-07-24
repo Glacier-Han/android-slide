@@ -1,6 +1,5 @@
 package com.glacier.androidslide
 
-import android.util.Log
 import com.glacier.androidslide.model.ImageSlide
 import com.glacier.androidslide.model.Slide
 import com.glacier.androidslide.model.SlideColor

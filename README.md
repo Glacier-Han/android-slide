@@ -43,7 +43,7 @@ Android 학습 프로젝트 #2
 
 > ## 6. 슬라이드(JSON) 불러오기
 > 230724 PM 4:00
-> - 서버에 저장된 JSON 데이터를 파싱하여 슬라이드로 저장 후 화면에 보여줄 수 있다.
+> - 서버에 저장된 JSON 데이터를 파싱하여 슬라이드로 저장 후 화면에 보여주는 기능 구현
 > - 서버와 통신하기 위해 ```Retrofit2``` 라이브러리를 사용하였고, 받아온 JSON을 내가 만든 클래스로 파싱하기 위해 ```Gson``` 라이브러리를 사용하였다.
 > - Slide 데이터를 인터페이스로 관리하고 있어서 Gson 기본 ```GsonConverterFactory``` 로는 ```java.lang.UnsupportedOperationException: interface can't be instantiated``` 오류가 발생하였다.
 > - 이를 해결하기 위해 ```JsonSlideDeserializer``` 를 만들어서 Slide객체 파싱시 클래스의 분기를 수동으로 설정해주었다.
