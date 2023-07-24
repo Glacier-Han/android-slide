@@ -73,7 +73,6 @@ class MainViewModel : ViewModel() {
     fun setNowSlideSelected(selected: Boolean) {
         slideManager.setNowSlideSelected(nowSlideIndex, selected)
         getNowSlide()
-
     }
 
     fun editColorRandom() {
@@ -100,6 +99,11 @@ class MainViewModel : ViewModel() {
         nowSlideIndex = slideManager.getSlideCount() - 1
         getNowSlide()
         getSlides()
+    }
 
+    fun editSlideImage(index: Int, image: ByteArray){
+        slideManager.editSlideImage(index, image)
+        getNowSlide()
+        getSlides()
     }
 }

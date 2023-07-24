@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.glacier.androidslide.R
 import com.glacier.androidslide.databinding.ItemSlideImageBinding
 import com.glacier.androidslide.databinding.ItemSlideSquareBinding
@@ -166,7 +167,7 @@ class SlideAdapter(
             // todo: 정사각형 슬라이드 처리하기
 
             itemView.setOnClickListener {
-                listener.onSlideSelected(SlideType.SQUARE, adapterPosition, squareSlide)
+                listener.onSlideSelected(adapterPosition, squareSlide)
             }
 
             binding.tvSlideNumber.text = "${adapterPosition + 1}"
@@ -185,9 +186,10 @@ class SlideAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(imageSlide: ImageSlide) {
             // todo: 이미지 슬라이드 처리하기
+            Glide.with(binding.root.context).load(imageSlide.image).error(R.drawable.outline_image_24).override(50,50).into(binding.ivSlide)
 
             itemView.setOnClickListener {
-                listener.onSlideSelected(SlideType.IMAGE, adapterPosition, imageSlide)
+                listener.onSlideSelected(adapterPosition, imageSlide)
             }
 
             itemView.setOnTouchListener(object : View.OnTouchListener {
