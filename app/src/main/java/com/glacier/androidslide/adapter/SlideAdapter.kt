@@ -142,7 +142,7 @@ class SlideAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val slide = slides[position]
-        return when (slide.slideType) {
+        return when (slide.type) {
             SlideType.SQUARE -> VIEW_TYPE_SQUARE
             SlideType.IMAGE -> VIEW_TYPE_IMAGE
         }

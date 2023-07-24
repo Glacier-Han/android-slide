@@ -1,12 +1,28 @@
 package com.glacier.androidslide.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide
 import com.glacier.androidslide.SlideManager
+import com.glacier.androidslide.api.JsonSlideApi
+import com.glacier.androidslide.api.RetrofitInstance
+import com.glacier.androidslide.model.ImageSlide
+import com.glacier.androidslide.model.JsonSlides
 import com.glacier.androidslide.model.Slide
+import com.glacier.androidslide.model.SquareSlide
 import com.glacier.androidslide.util.Mode
 import com.glacier.androidslide.util.SlideType
 import com.glacier.androidslide.util.UtilManager
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 class MainViewModel : ViewModel() {
     private val slideManager = SlideManager()
@@ -93,6 +109,7 @@ class MainViewModel : ViewModel() {
             UtilManager.getRandomColor()[1],
             UtilManager.getRandomColor()[2],
             255,
+            ByteArray(0),
             slideType
         )
 
@@ -101,9 +118,68 @@ class MainViewModel : ViewModel() {
         getSlides()
     }
 
-    fun editSlideImage(index: Int, image: ByteArray){
+    fun editSlideImage(index: Int, image: ByteArray) {
         slideManager.editSlideImage(index, image)
         getNowSlide()
         getSlides()
     }
+
+    fun getJsonSlides() {
+        val api = RetrofitInstance.getInstance().create(JsonSlideApi::class.java)
+        val apiMode = listOf(api.getSquareSlides(), api.getImageSlides())
+        apiMode.random().enqueue(object : Callback<JsonSlides> {
+            override fun onResponse(call: Call<JsonSlides>, response: Response<JsonSlides>) {
+                Log.d("DBG::RETROFIT", "res: ")
+                response.body()?.slides?.let { slides ->
+                    Log.d("DBG::RETROFIT", "res: $slides")
+                    for (slide in slides) {
+                        when (slide) {
+                            is ImageSlide -> {
+                                loadImageUrlToByteArray(slide.url)
+                            }
+
+                            is SquareSlide -> {
+                                slideManager.createSlide(
+                                    slide.color.r,
+                                    slide.color.g,
+                                    slide.color.b,
+                                    255,
+                                    ByteArray(0),
+                                    SlideType.SQUARE
+                                )
+                            }
+                        }
+                    }
+
+                    getNowSlide()
+                    getSlides()
+                }
+
+            }
+
+            override fun onFailure(call: Call<JsonSlides>, t: Throwable) {
+                Log.d("DBG::RETROFIT", "err: $t")
+            }
+        })
+    }
+
+    fun loadImageUrlToByteArray(imageUrl: String) {
+        val api = RetrofitInstance.getInstance().create(JsonSlideApi::class.java)
+        api.getImageByteArray(imageUrl).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    response.body()?.bytes()?.let { image ->
+                        slideManager.createSlide(0, 0, 0, 255, image, SlideType.IMAGE)
+                        getNowSlide()
+                        getSlides()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d("DBG::RETROFIT", "err: $t")
+            }
+        })
+    }
+
 }

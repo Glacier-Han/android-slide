@@ -1,6 +1,7 @@
 package com.glacier.androidslide.model
 
 import com.glacier.androidslide.util.SlideType
+import com.google.gson.annotations.SerializedName
 
 data class ImageSlide(
     override val id: String,
@@ -8,10 +9,12 @@ data class ImageSlide(
     override val alpha: Int,
     override val selected: Boolean,
     val image: ByteArray,
+    val url: String
 ) : Slide {
-    override val slideType: SlideType = SlideType.IMAGE
+    override val type: SlideType = SlideType.IMAGE
+
     override fun toString(): String {
-        return "$slideType - ($id), Side:$size, Image:$image, Alpha:$alpha, Selected:$selected"
+        return "$type - ($id), Side:$size, Image:$image, Alpha:$alpha, Selected:$selected, Url: $url"
     }
 
     override fun equals(other: Any?): Boolean {
