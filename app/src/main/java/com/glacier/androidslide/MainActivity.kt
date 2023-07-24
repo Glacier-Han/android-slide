@@ -1,30 +1,31 @@
 package com.glacier.androidslide
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import android.app.Activity
 >>>>>>> b1d5238 (feat: 갤러리에서 이미지 선택한 후 ByteArray로 저장하여 슬라이드에 표시 기능 구현)
+=======
+>>>>>>> 84d1a64 (refactor: 사용하지 않는 import문 제거)
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.ColorFilter
-import android.graphics.ColorMatrixColorFilter
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import android.widget.ImageView
 >>>>>>> b1d5238 (feat: 갤러리에서 이미지 선택한 후 ByteArray로 저장하여 슬라이드에 표시 기능 구현)
+=======
+>>>>>>> 84d1a64 (refactor: 사용하지 않는 import문 제거)
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -32,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
+<<<<<<< HEAD
 <<<<<<< HEAD
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -44,6 +46,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 >>>>>>> b1d5238 (feat: 갤러리에서 이미지 선택한 후 ByteArray로 저장하여 슬라이드에 표시 기능 구현)
+=======
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+>>>>>>> 84d1a64 (refactor: 사용하지 않는 import문 제거)
 import com.glacier.androidslide.adapter.SlideAdapter
 import com.glacier.androidslide.databinding.ActivityMainBinding
 import com.glacier.androidslide.listener.OnSlideDoubleClickListener
