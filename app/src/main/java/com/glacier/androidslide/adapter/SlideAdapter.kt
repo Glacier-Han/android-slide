@@ -173,9 +173,9 @@ class SlideAdapter(
             binding.ivSlide.setColorFilter(
                 Color.argb(
                     squareSlide.alpha,
-                    squareSlide.r,
-                    squareSlide.g,
-                    squareSlide.b
+                    squareSlide.color.r,
+                    squareSlide.color.g,
+                    squareSlide.color.b
                 )
             )
         }
