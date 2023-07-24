@@ -20,14 +20,8 @@ class MainViewModel : ViewModel() {
     private val _slides = MutableLiveData<List<Slide>>()
     val slides = _slides
 
-
-<<<<<<< HEAD
     fun getNowSlide() {
         _nowSlide.value = slideManager.getSlideByIndex(nowSlideIndex)
-=======
-    fun getNowSlide(): Slide? {
-        return slideManager.getSlideByIndex(nowSlideIndex)
->>>>>>> ffc203a (fix: 저번 브랜치 이슈 수정사항 적용)
     }
 
     fun getSlideWithIndex(index: Int): Slide? {
