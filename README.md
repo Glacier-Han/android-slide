@@ -40,3 +40,14 @@ Android 학습 프로젝트 #2
 > - ```GestureDetector.SimpleOnGestureListener()``` 를 활용하여 더블클릭을 감지 한 후, 이미지 슬라이드일 경우 갤러리를 오픈한다.
 > - ```registerForActivityResult```를 활용하여 갤러리에서 선택한 사진을 받아온 후, ```getByteArrayFromUri```를 사용하여 ByteArray로 이미지 정보를 저장한다.
 > - 이미지 상단 정렬을 위해서 ConstraintSet에서 제약정보를 동적으로 변경하였다.
+
+> ## 6. 슬라이드(JSON) 불러오기
+> 230724 PM 4:00
+> - 서버에 저장된 JSON 데이터를 파싱하여 슬라이드로 저장 후 화면에 보여줄 수 있다.
+> - 서버와 통신하기 위해 ```Retrofit2``` 라이브러리를 사용하였고, 받아온 JSON을 내가 만든 클래스로 파싱하기 위해 ```Gson``` 라이브러리를 사용하였다.
+> - Slide 데이터를 인터페이스로 관리하고 있어서 Gson 기본 ```GsonConverterFactory``` 로는 ```java.lang.UnsupportedOperationException: interface can't be instantiated``` 오류가 발생하였다.
+> - 이를 해결하기 위해 ```JsonSlideDeserializer``` 를 만들어서 Slide객체 파싱시 클래스의 분기를 수동으로 설정해주었다.
+> - ```Retrofit2``` 통신이 잘 안되어서 여러 방법을 시도해본 결과, 이유는 모르겠지만 한양대Wifi로는 접속이 안되었다. 휴대폰 핫스팟으로 진행하니 잘 되었다.
+> - 기존에는 observe중인 데이터가 바뀌면 ```adapter``` 자체를 새로 갱신했는데, 리사이클러뷰에서 ```notifyItemInserted``` 메소드를 실행하는 것으로 변경하니 버벅거림이 개선되었다.
+
+https://github.com/softeerbootcamp-2nd/android-slide/assets/61905052/58317a43-0664-4eed-a81f-d00cc0ac3877
