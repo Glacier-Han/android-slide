@@ -16,7 +16,6 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.ImageView
@@ -78,7 +77,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
 
     fun setObserver() {
         slideViewModel.nowSlide.observe(this) {
-            Log.d("TEST", it.alpha.toString())
             setSlideView(it)
         }
 
