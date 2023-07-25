@@ -1,5 +1,7 @@
 package com.glacier.androidslide
 
+import android.view.View.VISIBLE
+
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -18,14 +20,8 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.View.GONE
 import android.view.View.OnClickListener
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import android.widget.ImageView
->>>>>>> b1d5238 (feat: 갤러리에서 이미지 선택한 후 ByteArray로 저장하여 슬라이드에 표시 기능 구현)
-=======
->>>>>>> 84d1a64 (refactor: 사용하지 않는 import문 제거)
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -33,28 +29,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
-<<<<<<< HEAD
-<<<<<<< HEAD
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-=======
-import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
->>>>>>> b1d5238 (feat: 갤러리에서 이미지 선택한 후 ByteArray로 저장하여 슬라이드에 표시 기능 구현)
-=======
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
->>>>>>> 84d1a64 (refactor: 사용하지 않는 import문 제거)
 import com.glacier.androidslide.adapter.SlideAdapter
 import com.glacier.androidslide.databinding.ActivityMainBinding
 import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
+import com.glacier.androidslide.model.DrawingSlide
 import com.glacier.androidslide.model.ImageSlide
 import com.glacier.androidslide.model.Slide
 import com.glacier.androidslide.model.SquareSlide
@@ -133,6 +115,8 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
                 binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(slide.alpha).toString()
                 binding.btnBgcolor.text = UtilManager.rgbToHex(sColor.r, sColor.g, sColor.b)
                 binding.btnBgcolor.isEnabled = true
+                binding.ivSlide.visibility = VISIBLE
+                binding.dvDrawing.visibility = GONE
                 setBgColorBtnColor(slide.alpha, sColor.r, sColor.g, sColor.b)
             }
 
@@ -151,7 +135,14 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
                 binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(slide.alpha).toString()
                 binding.btnBgcolor.text = "IMAGE"
                 binding.btnBgcolor.isEnabled = false
+                binding.ivSlide.visibility = VISIBLE
+                binding.dvDrawing.visibility = GONE
                 setBgColorBtnColor(slide.alpha, 200, 200, 200)
+            }
+
+            is DrawingSlide -> {
+                binding.ivSlide.visibility = GONE
+                binding.dvDrawing.visibility = VISIBLE
             }
         }
     }

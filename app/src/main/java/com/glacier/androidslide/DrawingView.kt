@@ -17,6 +17,7 @@ class DrawingView(context: Context?, attrs: AttributeSet?) : View(context, attrs
 
     private var checkDrawn = false
     private val path = Path()
+    private val paths = mutableListOf<Path>()
     private val rectangles = mutableListOf<RectF>()
     private var rectStartX = Float.MAX_VALUE
     private var rectStartY = Float.MAX_VALUE
@@ -58,6 +59,7 @@ class DrawingView(context: Context?, attrs: AttributeSet?) : View(context, attrs
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     path.moveTo(touchX, touchY)
+                    paths.add(path)
                     rectStartX = touchX
                     rectStartY = touchY
                     rectEndX = touchX
@@ -67,6 +69,7 @@ class DrawingView(context: Context?, attrs: AttributeSet?) : View(context, attrs
 
                 MotionEvent.ACTION_MOVE -> {
                     path.lineTo(touchX, touchY)
+                    paths.add(path)
                     rectStartX = minOf(rectStartX, touchX)
                     rectStartY = minOf(rectStartY, touchY)
                     rectEndX = maxOf(rectEndX, touchX)
@@ -76,8 +79,9 @@ class DrawingView(context: Context?, attrs: AttributeSet?) : View(context, attrs
 
                 MotionEvent.ACTION_UP -> {
                     path.lineTo(touchX, touchY)
+                    paths.add(path)
                     checkDrawn = true
-                    drawRect()
+                    drawRect(rectStartX, rectStartY, rectEndX, rectEndY)
                     invalidate()
                 }
             }
@@ -85,7 +89,7 @@ class DrawingView(context: Context?, attrs: AttributeSet?) : View(context, attrs
         return true
     }
 
-    private fun drawRect() {
+    fun drawRect(rectStartX: Float, rectStartY: Float, rectEndX: Float, rectEndY: Float) {
         val rect = RectF(rectStartX, rectStartY, rectEndX, rectEndY)
         rectangles.add(rect)
     }
