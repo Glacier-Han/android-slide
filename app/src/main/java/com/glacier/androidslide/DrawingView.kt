@@ -7,16 +7,11 @@ import android.view.MotionEvent
 import android.view.View
 import com.glacier.androidslide.util.UtilManager
 
-class DrawingView @JvmOverloads constructor(
-    context: Context?,
-    attrs: AttributeSet? = null
-) : View(context, attrs) {
+class DrawingView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
 
     init {
         context?.theme?.obtainStyledAttributes(
-            attrs,
-            R.styleable.DrawingView,
-            0, 0
+            attrs, R.styleable.DrawingView, 0, 0
         )
     }
 
@@ -68,7 +63,6 @@ class DrawingView @JvmOverloads constructor(
                     rectEndX = touchX
                     rectEndY = touchY
                     invalidate()
-
                 }
 
                 MotionEvent.ACTION_MOVE -> {
@@ -78,7 +72,6 @@ class DrawingView @JvmOverloads constructor(
                     rectEndX = maxOf(rectEndX, touchX)
                     rectEndY = maxOf(rectEndY, touchY)
                     invalidate()
-
                 }
 
                 MotionEvent.ACTION_UP -> {
@@ -89,17 +82,11 @@ class DrawingView @JvmOverloads constructor(
                 }
             }
         }
-
         return true
     }
 
     private fun drawRect() {
         val rect = RectF(rectStartX, rectStartY, rectEndX, rectEndY)
         rectangles.add(rect)
-    }
-
-    fun resetDrawing() {
-        rectangles.clear()
-        invalidate()
     }
 }
