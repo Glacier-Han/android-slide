@@ -123,9 +123,7 @@ class MainViewModel : ViewModel() {
         val apiMode = listOf(api.getSquareSlides(), api.getImageSlides())
         apiMode.random().enqueue(object : Callback<JsonSlides> {
             override fun onResponse(call: Call<JsonSlides>, response: Response<JsonSlides>) {
-                Log.d("DBG::RETROFIT", "res: ")
                 response.body()?.slides?.let { slides ->
-                    Log.d("DBG::RETROFIT", "res: $slides")
                     for (slide in slides) {
                         when (slide) {
                             is ImageSlide -> {
@@ -152,7 +150,6 @@ class MainViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<JsonSlides>, t: Throwable) {
-                Log.d("DBG::RETROFIT", "err: $t")
             }
         })
     }
@@ -171,7 +168,6 @@ class MainViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.d("DBG::RETROFIT", "err: $t")
             }
         })
     }
