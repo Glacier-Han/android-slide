@@ -25,3 +25,11 @@ Android 학습 프로젝트 #2
 > - 배경색이나 알파값 변경등의 명령을 MainActivity에서 ViewModel로 전달하면, 뷰모델은 각 로직을 처리한 후 nowSlide에 변경사항을 적용한 SquareSlide 객체를 갱신한다.
 > - MainActivity에서는 ViewModel의 nowSlide를 observe 하고 있다가 값 변경을 감지하면 UI를 업데이트한다.
 
+> ## 4. 슬라이드 목록 표시
+> 230720 AM 10:30
+> - RecyclerView에 현재 슬라이드의 목록을 표시하는 기능을 추가하였다.
+> - 기존에는 ```SquareSlide``` 객체 기준으로 모든 동작이 이루어졌다. 하지만 새로운 요구사항에 이미지 슬라이드 종류가 새로 추가될 예정이라서 데이터 구조를 변경하였다.
+> - ```Slide``` 인터페이스를 만들어서, 슬라이드의 필수적인 요소는 모두 가지고 있게 구현한다. ```slideType, id, side, alpha, selected``` 을 필수 속성으로 간주하였다.
+> - ```SquareSlide``` 에는 RGB값을 필수속성으로 추가하였고, ```ImageSlide```에는 image 데이터가 들어갈 변수를 필수속성으로 추가하였다.
+> - ```SlideAdapter```에는 ViewType을 분기하여 해당하는 데이터 클래스에서 해당하는 뷰를 띄워주게 구현하였다.
+> - ```ItemTouchHelper.Callback()``` 을 사용하여 Drag&Drop으로 순서를 바꿀 수 있게 구현하였다.

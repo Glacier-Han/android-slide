@@ -5,6 +5,20 @@ import kotlin.random.Random
 
 class UtilManager {
     companion object {
+
+        private val alphaMap: Map<Int, Int> = mapOf(
+            1 to 25,
+            2 to 51,
+            3 to 76,
+            4 to 102,
+            5 to 127,
+            6 to 153,
+            7 to 178,
+            8 to 204,
+            9 to 229,
+            10 to 255
+        )
+
         fun generateID(length: Int): String {
             val charset = "abcdefghijklmnopqrstuvwsyz0123456789"
             val randomString = (1..length)
@@ -30,12 +44,15 @@ class UtilManager {
             return "0x" + hexR.padStart(2, '0') + hexG.padStart(2, '0') + hexB.padStart(2, '0')
         }
 
-        fun getAlphaMode(mode: Int): Int {
-            return if (mode == 10) {
-                255
-            } else {
-                (255 / 10) * mode
-            }
+        fun getModeToAlpha(mode: Int): Int {
+            return alphaMap[mode]!!
         }
+
+        fun getAlphaToMode(alpha: Int): Int {
+            val reversedAlphaMap: Map<Int, Int> = alphaMap.entries.associate { (k, v) -> v to k }
+            return  reversedAlphaMap[alpha]!!
+        }
+
+
     }
 }

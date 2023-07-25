@@ -4,93 +4,102 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.glacier.androidslide.SlideManager
+import com.glacier.androidslide.model.Slide
 import com.glacier.androidslide.model.SquareSlide
 import com.glacier.androidslide.util.Mode
+import com.glacier.androidslide.util.SlideType
 import com.glacier.androidslide.util.UtilManager
 
 class SquareSlideViewModel : ViewModel() {
     private val slideManager = SlideManager()
 
-    private val _nowAlpha = MutableLiveData<Int>()
-    val nowAlpha = _nowAlpha
+    var nowAlpha: Int = 10
+    var nowSlideIndex: Int = 0
 
-    private val _nowSlideIndex = MutableLiveData<Int>()
-    val nowSlideIndex = _nowSlideIndex
-
-    private val _nowSlide = MutableLiveData<SquareSlide>()
+    private val _nowSlide = MutableLiveData<Slide>()
     val nowSlide = _nowSlide
 
-    init {
-        _nowAlpha.value = 10
-        _nowSlideIndex.value = 0
+    private val _slides = MutableLiveData<List<Slide>>()
+    val slides = _slides
+
+
+    fun getNowSlide(): Slide? {
+        return slideManager.getSlideByIndex(nowSlideIndex)
     }
 
-    fun getNowSlide(): SquareSlide? {
-        _nowSlideIndex.value?.let { index ->
-            _nowSlide.value = slideManager.getSlideByIndex(index)
-            return _nowSlide.value
-        } ?: return null
+    fun getSlideWithIndex(index: Int): Slide? {
+        nowSlideIndex = index
+        _nowSlide.value = slideManager.getSlideByIndex(index)
+        nowAlpha = UtilManager.getAlphaToMode(_nowSlide.value?.alpha!!)
+        return _nowSlide.value
+    }
+
+    fun getSlides(): List<Slide> {
+        _slides.value = slideManager.getAllSlides()
+        return _slides.value!!
+    }
+
+    fun setSlideIndex(index: Int) {
+        nowSlideIndex = index
+        getSlideWithIndex(index)
     }
 
     fun editAlpha(mode: Mode) {
-        _nowSlideIndex.value?.let { index ->
-            when (mode) {
-                Mode.MINUS -> {
-                    if (_nowAlpha.value!! > 1) {
-                        _nowAlpha.value = _nowAlpha.value!! - 1
-                        slideManager.editSlideAlpha(
-                            index,
-                            UtilManager.getAlphaMode(_nowAlpha.value!!)
-                        )
-                    }
-                }
-
-                Mode.PLUS -> {
-                    if (_nowAlpha.value!! < 10) {
-                        _nowAlpha.value = _nowAlpha.value!! + 1
-                        slideManager.editSlideAlpha(
-                            index,
-                            UtilManager.getAlphaMode(_nowAlpha.value!!)
-                        )
-                    }
+        when (mode) {
+            Mode.MINUS -> {
+                if (nowAlpha > 1) {
+                    nowAlpha -= 1
+                    slideManager.editSlideAlpha(
+                        nowSlideIndex,
+                        UtilManager.getModeToAlpha(nowAlpha)
+                    )
                 }
             }
-            getNowSlide()
+
+            Mode.PLUS -> {
+                if (nowAlpha < 10) {
+                    nowAlpha += 1
+                    slideManager.editSlideAlpha(
+                        nowSlideIndex,
+                        UtilManager.getModeToAlpha(nowAlpha)
+                    )
+                }
+
+            }
         }
+
+        getNowSlide()
     }
 
     fun setNowSlideSelected(selected: Boolean) {
-        _nowSlideIndex.value?.let { index ->
-            slideManager.setNowSlideSelected(index, selected)
-            getNowSlide()
-        }
+        slideManager.setNowSlideSelected(nowSlideIndex, selected)
+        getNowSlide()
+
     }
 
     fun editColorRandom() {
-        _nowSlideIndex.value?.let { index ->
-            slideManager.editSlideColor(
-                index,
-                UtilManager.getRandomColor()[0],
-                UtilManager.getRandomColor()[1],
-                UtilManager.getRandomColor()[2]
-            )
-            getNowSlide()
-        }
+        slideManager.editSquareSlideColor(
+            nowSlideIndex,
+            UtilManager.getRandomColor()[0],
+            UtilManager.getRandomColor()[1],
+            UtilManager.getRandomColor()[2]
+        )
+        getNowSlide()
+
     }
 
-    fun setNewSlide() {
-        _nowAlpha.value?.let { alpha ->
-            slideManager.createSlide(
-                UtilManager.getRandomColor()[0],
-                UtilManager.getRandomColor()[1],
-                UtilManager.getRandomColor()[2],
-                UtilManager.getAlphaMode(alpha)
-            )
+    fun setNewSlide(slideType: SlideType) {
+        slideManager.createSlide(
+            UtilManager.getRandomColor()[0],
+            UtilManager.getRandomColor()[1],
+            UtilManager.getRandomColor()[2],
+            255,
+            slideType
+        )
 
-            _nowSlideIndex.value = slideManager.getSlideCount() - 1
-            getNowSlide()
-        }
-
+        nowSlideIndex = slideManager.getSlideCount() - 1
+        getNowSlide()
+        getSlides()
 
     }
 }

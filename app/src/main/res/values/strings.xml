@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AndroidSlide</string>
+    <string name="text_btn_add_slide">( + )</string>
 </resources>
