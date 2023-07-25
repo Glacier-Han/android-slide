@@ -128,18 +128,15 @@ class SlideAdapter(
 
         when (holder) {
             is SquareSlideViewHolder -> {
-                val squareSlide = slide as SquareSlide
-                holder.bind(squareSlide)
+                holder.bind(slide as SquareSlide)
             }
 
             is ImageSlideViewHolder -> {
-                val imageSlide = slide as ImageSlide
-                holder.bind(imageSlide)
+                holder.bind(slide as ImageSlide)
             }
 
             is DrawingSlideViewHolder -> {
-                val drawingSlide = slide as DrawingSlide
-                holder.bind(drawingSlide)
+                holder.bind(slide as DrawingSlide)
             }
         }
     }
@@ -225,7 +222,6 @@ class SlideAdapter(
     inner class DrawingSlideViewHolder(private val binding: ItemSlideDrawingBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(drawingSlide: DrawingSlide) {
-            // 드로잉 슬라이드 뷰홀더
             itemView.setOnClickListener {
                 listener.onSlideSelected(adapterPosition, drawingSlide)
             }

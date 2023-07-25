@@ -1,14 +1,6 @@
 package com.glacier.androidslide
 
 import android.view.View.VISIBLE
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import android.app.Activity
->>>>>>> b1d5238 (feat: 갤러리에서 이미지 선택한 후 ByteArray로 저장하여 슬라이드에 표시 기능 구현)
-=======
->>>>>>> 84d1a64 (refactor: 사용하지 않는 import문 제거)
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -22,6 +14,7 @@ import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.OnClickListener
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -143,6 +136,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
             is DrawingSlide -> {
                 binding.ivSlide.visibility = GONE
                 binding.dvDrawing.visibility = VISIBLE
+                binding.dvDrawing.setSlide(slide)
             }
         }
     }
@@ -165,6 +159,23 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
             val itemTouchHelper = ItemTouchHelper(itemMoveCallback)
             itemTouchHelper.attachToRecyclerView(this)
         }
+    }
+
+    private fun setDrawingView(): DrawingView{
+        val drawView = DrawingView(this)
+        drawView.layoutParams = ViewGroup.LayoutParams(0, 0)
+        drawView.id = R.id.dv_drawing
+        binding.rootView.addView(drawView)
+
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(binding.rootView)
+        constraintSet.connect(drawView.id, ConstraintSet.START, R.id.rv_slides, ConstraintSet.END)
+        constraintSet.connect(drawView.id, ConstraintSet.END, R.id.vw_control, ConstraintSet.START)
+        constraintSet.connect(drawView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        constraintSet.connect(drawView.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constraintSet.setHorizontalWeight(drawView.id, 0.6f)
+        constraintSet.applyTo(binding.rootView)
+        return drawView
     }
 
     override fun onClick(view: View?) {
