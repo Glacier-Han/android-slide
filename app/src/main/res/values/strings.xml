@@ -6,5 +6,7 @@
     <string name="menu_toast_back">슬라이드를 뒤로 보냅니다.</string>
     <string name="menu_toast_hard_front">슬라이드를 맨 앞으로 보냅니다.</string>
     <string name="menu_toast_front">슬라이드를 앞으로 보냅니다.</string>
+    <string name="text_image">IMAGE</string>
+    <string name="text_drawing">DRAWING</string>
 
 </resources>

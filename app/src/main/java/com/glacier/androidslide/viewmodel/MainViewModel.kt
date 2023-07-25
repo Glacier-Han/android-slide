@@ -105,4 +105,5 @@ class MainViewModel : ViewModel() {
         getNowSlide()
         getSlides()
     }
+
 }

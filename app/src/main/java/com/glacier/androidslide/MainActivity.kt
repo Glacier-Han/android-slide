@@ -10,7 +10,6 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.OnClickListener
@@ -126,7 +125,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
                     .into(binding.ivSlide)
 
                 binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(slide.alpha).toString()
-                binding.btnBgcolor.text = "IMAGE"
+                binding.btnBgcolor.text = getString(R.string.text_image)
                 binding.btnBgcolor.isEnabled = false
                 binding.ivSlide.visibility = VISIBLE
                 binding.dvDrawing.visibility = GONE
@@ -134,6 +133,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
             }
 
             is DrawingSlide -> {
+                binding.btnBgcolor.text = getString(R.string.text_drawing)
                 binding.ivSlide.visibility = GONE
                 binding.dvDrawing.visibility = VISIBLE
                 binding.dvDrawing.setSlide(slide)
@@ -274,7 +274,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
     override fun onLongClick(view: View?): Boolean {
         when (view?.id) {
             R.id.btn_add_slide -> {
-                Log.d("DBG::RETROFIT", "sended")
                 slideViewModel.getJsonSlides()
             }
         }
