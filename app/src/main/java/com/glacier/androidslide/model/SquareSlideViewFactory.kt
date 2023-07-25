@@ -1,5 +1,6 @@
 package com.glacier.androidslide.model
 
+import com.glacier.androidslide.DrawingView
 import com.glacier.androidslide.util.SlideType
 import com.glacier.androidslide.util.UtilManager
 import kotlin.random.Random
@@ -12,6 +13,7 @@ object SquareSlideViewFactory : SquareSlideFactory {
         return when(slideType){
             SlideType.SQUARE -> SquareSlide(id, side, alpha, true, SlideColor(r, g, b))
             SlideType.IMAGE -> ImageSlide(id, side, alpha, true, image, "")
+            SlideType.DRAWING -> DrawingSlide(id, side, alpha, true, null)
         }
     }
 }

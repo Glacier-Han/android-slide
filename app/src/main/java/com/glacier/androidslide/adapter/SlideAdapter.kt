@@ -14,11 +14,13 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.glacier.androidslide.R
+import com.glacier.androidslide.databinding.ItemSlideDrawingBinding
 import com.glacier.androidslide.databinding.ItemSlideImageBinding
 import com.glacier.androidslide.databinding.ItemSlideSquareBinding
 import com.glacier.androidslide.listener.ItemMoveListener
 import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
+import com.glacier.androidslide.model.DrawingSlide
 import com.glacier.androidslide.model.ImageSlide
 import com.glacier.androidslide.model.Slide
 import com.glacier.androidslide.model.SquareSlide
@@ -34,6 +36,7 @@ class SlideAdapter(
     companion object {
         private const val VIEW_TYPE_SQUARE = 0
         private const val VIEW_TYPE_IMAGE = 1
+        private const val VIEW_TYPE_DRAWING = 2
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -41,11 +44,13 @@ class SlideAdapter(
         val binding = when (viewType) {
             VIEW_TYPE_SQUARE -> ItemSlideSquareBinding.inflate(inflater, parent, false)
             VIEW_TYPE_IMAGE -> ItemSlideImageBinding.inflate(inflater, parent, false)
+            VIEW_TYPE_DRAWING -> ItemSlideDrawingBinding.inflate(inflater, parent, false)
             else -> throw IllegalArgumentException("Invalid ViewType")
         }
         return when (viewType) {
             VIEW_TYPE_SQUARE -> SquareSlideViewHolder(binding as ItemSlideSquareBinding)
             VIEW_TYPE_IMAGE -> ImageSlideViewHolder(binding as ItemSlideImageBinding)
+            VIEW_TYPE_DRAWING -> DrawingSlideViewHolder(binding as ItemSlideDrawingBinding)
             else -> throw IllegalArgumentException("Invalid ViewType")
         }
     }
@@ -133,6 +138,11 @@ class SlideAdapter(
                 val imageSlide = slide as ImageSlide
                 holder.bind(imageSlide)
             }
+
+            is DrawingSlideViewHolder -> {
+                val drawingSlide = slide as DrawingSlide
+                holder.bind(drawingSlide)
+            }
         }
     }
 
@@ -145,6 +155,7 @@ class SlideAdapter(
         return when (slide.type) {
             SlideType.SQUARE -> VIEW_TYPE_SQUARE
             SlideType.IMAGE -> VIEW_TYPE_IMAGE
+            SlideType.DRAWING -> VIEW_TYPE_DRAWING
         }
     }
 
@@ -154,7 +165,6 @@ class SlideAdapter(
         slides.removeAt(fromPosition)
         slides.add(toPosition, slide)
 
-        Log.d("DTEST", "TEST")
         notifyItemMoved(fromPosition, toPosition)
         notifyItemChanged(fromPosition)
         notifyItemChanged(toPosition)
@@ -164,8 +174,6 @@ class SlideAdapter(
     inner class SquareSlideViewHolder(private val binding: ItemSlideSquareBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(squareSlide: SquareSlide) {
-            // todo: 정사각형 슬라이드 처리하기
-
             itemView.setOnClickListener {
                 listener.onSlideSelected(adapterPosition, squareSlide)
             }
@@ -185,7 +193,6 @@ class SlideAdapter(
     inner class ImageSlideViewHolder(private val binding: ItemSlideImageBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(imageSlide: ImageSlide) {
-            // todo: 이미지 슬라이드 처리하기
             Glide.with(binding.root.context).load(imageSlide.image).error(R.drawable.outline_image_24).override(50,50).into(binding.ivSlide)
 
             itemView.setOnClickListener {
@@ -205,6 +212,18 @@ class SlideAdapter(
                     return gestureDetector.onTouchEvent(event)
                 }
             })
+
+            binding.tvSlideNumber.text = "${adapterPosition + 1}"
+        }
+    }
+
+    inner class DrawingSlideViewHolder(private val binding: ItemSlideDrawingBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(drawingSlide: DrawingSlide) {
+            // 드로잉 슬라이드 뷰홀더
+            itemView.setOnClickListener {
+                listener.onSlideSelected(adapterPosition, drawingSlide)
+            }
 
             binding.tvSlideNumber.text = "${adapterPosition + 1}"
         }
