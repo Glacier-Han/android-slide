@@ -18,7 +18,7 @@ class DrawingView(context: Context?, attrs: AttributeSet? = null) : View(context
 
     private var _slide: DrawingSlide? = null
     private var rectangle = RectF()
-    private val drawingPaint = setDrawColor()
+    private var drawingPaint = setDrawColor()
 
     private val rectPaint = Paint().apply {
         color = Color.BLACK
@@ -49,7 +49,7 @@ class DrawingView(context: Context?, attrs: AttributeSet? = null) : View(context
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        _slide?.let {slide ->
+        _slide?.let { slide ->
             canvas.drawPath(slide.path, drawingPaint)
             canvas.drawRect(rectangle, rectPaint)
             invalidate()
@@ -57,10 +57,12 @@ class DrawingView(context: Context?, attrs: AttributeSet? = null) : View(context
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        val touchX = event.x
+        val touchY = event.y
+
         _slide?.let { slide ->
             if (slide.isDrawable) {
-                val touchX = event.x
-                val touchY = event.y
+
 
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
@@ -87,6 +89,11 @@ class DrawingView(context: Context?, attrs: AttributeSet? = null) : View(context
                         drawRect(slide.rectStartX, slide.rectStartY, slide.rectEndX, slide.rectEndY)
                         invalidate()
                     }
+                }
+            } else {
+                if (event.action == MotionEvent.ACTION_UP && rectangle.contains(touchX, touchY)) {
+                    drawingPaint = setDrawColor()
+                    slide.paint = drawingPaint
                 }
             }
         }
