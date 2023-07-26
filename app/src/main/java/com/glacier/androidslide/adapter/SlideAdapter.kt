@@ -10,25 +10,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.glacier.androidslide.R
+import com.glacier.androidslide.data.enums.SlideType
+import com.glacier.androidslide.data.model.DrawingSlide
+import com.glacier.androidslide.data.model.ImageSlide
+import com.glacier.androidslide.data.model.Slide
+import com.glacier.androidslide.data.model.SquareSlide
 import com.glacier.androidslide.databinding.ItemSlideDrawingBinding
 import com.glacier.androidslide.databinding.ItemSlideImageBinding
 import com.glacier.androidslide.databinding.ItemSlideSquareBinding
 import com.glacier.androidslide.listener.ItemMoveListener
 import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
-import com.glacier.androidslide.model.DrawingSlide
-import com.glacier.androidslide.model.ImageSlide
-import com.glacier.androidslide.model.Slide
-import com.glacier.androidslide.model.SquareSlide
-import com.glacier.androidslide.util.SlideType
 
 class SlideAdapter(
     private val slides: MutableList<Slide>,
-    private val listener: OnSlideSelectedListener,
-    private val doubleClickListener: OnSlideDoubleClickListener
+    private val onSlideSelected: (Int, Slide) -> Unit,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemMoveListener {
 
@@ -169,19 +169,17 @@ class SlideAdapter(
     inner class SquareSlideViewHolder(private val binding: ItemSlideSquareBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(squareSlide: SquareSlide) {
-            itemView.setOnClickListener {
-                listener.onSlideSelected(adapterPosition, squareSlide)
-            }
-
-            binding.tvSlideNumber.text = "${adapterPosition + 1}"
-            binding.ivSlide.setColorFilter(
-                Color.argb(
-                    squareSlide.alpha,
-                    squareSlide.color.r,
-                    squareSlide.color.g,
-                    squareSlide.color.b
-                )
+            binding.slideIndex = adapterPosition + 1
+            binding.colorTint = Color.argb(
+                squareSlide.alpha,
+                squareSlide.color.r,
+                squareSlide.color.g,
+                squareSlide.color.b
             )
+
+            itemView.setOnClickListener {
+                onSlideSelected(adapterPosition, squareSlide)
+            }
         }
     }
 
@@ -193,7 +191,7 @@ class SlideAdapter(
                 .error(R.drawable.outline_image_24).override(50, 50).into(binding.ivSlide)
 
             itemView.setOnClickListener {
-                listener.onSlideSelected(adapterPosition, imageSlide)
+                onSlideSelected(adapterPosition, imageSlide)
             }
 
             itemView.setOnTouchListener(object : View.OnTouchListener {
@@ -210,23 +208,17 @@ class SlideAdapter(
                             }
                         })
 
-                override fun onTouch(v: View?, event: MotionEvent): Boolean {
-                    return gestureDetector.onTouchEvent(event)
-                }
-            })
 
-            binding.tvSlideNumber.text = "${adapterPosition + 1}"
         }
     }
 
     inner class DrawingSlideViewHolder(private val binding: ItemSlideDrawingBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(drawingSlide: DrawingSlide) {
+            binding.slideIndex = adapterPosition + 1
             itemView.setOnClickListener {
-                listener.onSlideSelected(adapterPosition, drawingSlide)
+                onSlideSelected(adapterPosition, drawingSlide)
             }
-
-            binding.tvSlideNumber.text = "${adapterPosition + 1}"
         }
     }
 

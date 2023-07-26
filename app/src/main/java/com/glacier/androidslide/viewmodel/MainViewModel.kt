@@ -20,19 +20,21 @@ class MainViewModel : ViewModel() {
     private val _slides = MutableLiveData<List<Slide>>()
     val slides = _slides
 
+    val adapter by lazy { SlideAdapter(_slides.value as MutableList<Slide>, ::onSlideSelected) }
 
     fun getNowSlide(): Slide? {
         return slideManager.getSlideByIndex(nowSlideIndex)
     }
 
     fun getSlideWithIndex(index: Int): Slide? {
-        nowSlideIndex = index
         _nowSlide.value = slideManager.getSlideByIndex(index)
+        nowSlideIndex = index
         nowAlpha = UtilManager.getAlphaToMode(_nowSlide.value?.alpha!!)
+        getNowSlideData()
         return _nowSlide.value
     }
 
-    fun getSlides(): List<Slide> {
+    fun getSlidesData(): List<Slide> {
         _slides.value = slideManager.getAllSlides()
         return _slides.value!!
     }
@@ -66,13 +68,13 @@ class MainViewModel : ViewModel() {
             }
         }
 
-        getNowSlide()
-        getSlides()
+        getNowSlideData()
+        getSlidesData()
     }
 
     fun setNowSlideSelected(selected: Boolean) {
         slideManager.setNowSlideSelected(nowSlideIndex, selected)
-        getNowSlide()
+        getNowSlideData()
     }
 
     fun editColorRandom() {
@@ -86,7 +88,7 @@ class MainViewModel : ViewModel() {
 
     }
 
-    fun setNewSlide(slideType: SlideType) {
+    fun setNewSlide() {
         slideManager.createSlide(
             UtilManager.getRandomColor()[0],
             UtilManager.getRandomColor()[1],
@@ -96,14 +98,14 @@ class MainViewModel : ViewModel() {
         )
 
         nowSlideIndex = slideManager.getSlideCount() - 1
-        getNowSlide()
-        getSlides()
+        getNowSlideData()
+        getSlidesData()
     }
 
     fun editSlideImage(index: Int, image: ByteArray){
         slideManager.editSlideImage(index, image)
-        getNowSlide()
-        getSlides()
+        getNowSlideData()
+        getSlidesData()
     }
 
 }

@@ -1,8 +1,7 @@
 package com.glacier.androidslide.listener
 
-import com.glacier.androidslide.model.Slide
-import com.glacier.androidslide.util.SlideType
+import com.glacier.androidslide.data.model.Slide
 
 interface OnSlideDoubleClickListener {
-    fun onSlideDoubleClicked(position: Int, slide: Slide)
+    fun onSlideDoubleClicked(slide: Slide)
 }
