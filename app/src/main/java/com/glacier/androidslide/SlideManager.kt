@@ -1,11 +1,11 @@
 package com.glacier.androidslide
 
-import com.glacier.androidslide.model.ImageSlide
-import com.glacier.androidslide.model.Slide
-import com.glacier.androidslide.model.SlideColor
-import com.glacier.androidslide.model.SquareSlide
-import com.glacier.androidslide.model.SquareSlideViewFactory
-import com.glacier.androidslide.util.SlideType
+import com.glacier.androidslide.data.enums.SlideType
+import com.glacier.androidslide.data.factory.SquareSlideViewFactory
+import com.glacier.androidslide.data.model.ImageSlide
+import com.glacier.androidslide.data.model.Slide
+import com.glacier.androidslide.data.model.SlideColor
+import com.glacier.androidslide.data.model.SquareSlide
 
 class SlideManager() {
     private val slideList: MutableList<Slide> = mutableListOf()

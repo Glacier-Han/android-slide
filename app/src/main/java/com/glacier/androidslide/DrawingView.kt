@@ -5,7 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.glacier.androidslide.model.DrawingSlide
+import com.glacier.androidslide.data.model.DrawingSlide
 import com.glacier.androidslide.util.UtilManager
 
 class DrawingView(context: Context?, attrs: AttributeSet? = null) : View(context, attrs) {

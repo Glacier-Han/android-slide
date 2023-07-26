@@ -4,14 +4,16 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.glacier.androidslide.SlideManager
+import com.glacier.androidslide.adapter.SlideAdapter
 import com.glacier.androidslide.api.JsonSlideApi
 import com.glacier.androidslide.api.RetrofitInstance
-import com.glacier.androidslide.model.ImageSlide
-import com.glacier.androidslide.model.JsonSlides
-import com.glacier.androidslide.model.Slide
-import com.glacier.androidslide.model.SquareSlide
-import com.glacier.androidslide.util.Mode
-import com.glacier.androidslide.util.SlideType
+import com.glacier.androidslide.data.enums.Mode
+import com.glacier.androidslide.data.enums.SlideType
+import com.glacier.androidslide.data.model.ImageSlide
+import com.glacier.androidslide.data.model.JsonSlides
+import com.glacier.androidslide.data.model.Slide
+import com.glacier.androidslide.data.model.SquareSlide
+import com.glacier.androidslide.listener.OnSlideSelectedListener
 import com.glacier.androidslide.util.UtilManager
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -30,19 +32,21 @@ class MainViewModel : ViewModel() {
     private val _slides = MutableLiveData<List<Slide>>()
     val slides = _slides
 
+    val adapter by lazy { SlideAdapter(_slides.value as MutableList<Slide>, ::onSlideSelected) }
 
-    fun getNowSlide() {
+    fun getNowSlideData() {
         _nowSlide.value = slideManager.getSlideByIndex(nowSlideIndex)
     }
 
     fun getSlideWithIndex(index: Int): Slide? {
-        nowSlideIndex = index
         _nowSlide.value = slideManager.getSlideByIndex(index)
+        nowSlideIndex = index
         nowAlpha = UtilManager.getAlphaToMode(_nowSlide.value?.alpha!!)
+        getNowSlideData()
         return _nowSlide.value
     }
 
-    fun getSlides(): List<Slide> {
+    fun getSlidesData(): List<Slide> {
         _slides.value = slideManager.getAllSlides()
         return _slides.value!!
     }
@@ -76,13 +80,13 @@ class MainViewModel : ViewModel() {
             }
         }
 
-        getNowSlide()
-        getSlides()
+        getNowSlideData()
+        getSlidesData()
     }
 
     fun setNowSlideSelected(selected: Boolean) {
         slideManager.setNowSlideSelected(nowSlideIndex, selected)
-        getNowSlide()
+        getNowSlideData()
     }
 
     fun editColorRandom() {
@@ -93,32 +97,32 @@ class MainViewModel : ViewModel() {
             UtilManager.getRandomColor()[2]
         )
         slides.postValue(slides.value)
-        getNowSlide()
+        getNowSlideData()
 
     }
 
-    fun setNewSlide(slideType: SlideType) {
+    fun setNewSlide() {
         slideManager.createSlide(
             UtilManager.getRandomColor()[0],
             UtilManager.getRandomColor()[1],
             UtilManager.getRandomColor()[2],
             255,
             ByteArray(0),
-            slideType
+            SlideType.values().random()
         )
 
         nowSlideIndex = slideManager.getSlideCount() - 1
-        getNowSlide()
-        getSlides()
+        getNowSlideData()
+        getSlidesData()
     }
 
     fun editSlideImage(index: Int, image: ByteArray) {
         slideManager.editSlideImage(index, image)
-        getNowSlide()
-        getSlides()
+        getNowSlideData()
+        getSlidesData()
     }
 
-    fun getJsonSlides() {
+    fun getJsonSlides(): Boolean {
         val api = RetrofitInstance.getInstance().create(JsonSlideApi::class.java)
         val apiMode = listOf(api.getSquareSlides(), api.getImageSlides())
         apiMode.random().enqueue(object : Callback<JsonSlides> {
@@ -143,8 +147,8 @@ class MainViewModel : ViewModel() {
                         }
                     }
 
-                    getNowSlide()
-                    getSlides()
+                    getNowSlideData()
+                    getSlidesData()
                 }
 
             }
@@ -152,6 +156,7 @@ class MainViewModel : ViewModel() {
             override fun onFailure(call: Call<JsonSlides>, t: Throwable) {
             }
         })
+        return true
     }
 
     fun loadImageUrlToByteArray(imageUrl: String) {
@@ -160,9 +165,10 @@ class MainViewModel : ViewModel() {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     response.body()?.bytes()?.let { image ->
+                        Log.d("TEST",image.toString())
                         slideManager.createSlide(0, 0, 0, 255, image, SlideType.IMAGE)
-                        getNowSlide()
-                        getSlides()
+                        getNowSlideData()
+                        getSlidesData()
                     }
                 }
             }
@@ -171,5 +177,10 @@ class MainViewModel : ViewModel() {
             }
         })
     }
+
+    private fun onSlideSelected(position: Int, slide: Slide) {
+        getSlideWithIndex(position)
+    }
+
 
 }

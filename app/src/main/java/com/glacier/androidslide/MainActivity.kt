@@ -13,7 +13,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.OnClickListener
 import android.view.View.VISIBLE
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -21,37 +20,49 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.glacier.androidslide.adapter.SlideAdapter
+import com.glacier.androidslide.data.enums.Mode
+import com.glacier.androidslide.data.enums.SlideType
+import com.glacier.androidslide.data.model.DrawingSlide
+import com.glacier.androidslide.data.model.ImageSlide
+import com.glacier.androidslide.data.model.Slide
+import com.glacier.androidslide.data.model.SquareSlide
 import com.glacier.androidslide.databinding.ActivityMainBinding
 import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
-import com.glacier.androidslide.model.DrawingSlide
-import com.glacier.androidslide.model.ImageSlide
-import com.glacier.androidslide.model.Slide
-import com.glacier.androidslide.model.SquareSlide
 import com.glacier.androidslide.util.ItemMoveCallback
-import com.glacier.androidslide.util.Mode
-import com.glacier.androidslide.util.SlideType
 import com.glacier.androidslide.util.UtilManager
 import com.glacier.androidslide.viewmodel.MainViewModel
 import jp.wasabeef.glide.transformations.ColorFilterTransformation
 import java.io.IOException
 
 class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListener,
-    OnSlideSelectedListener,
     OnSlideDoubleClickListener {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val slideViewModel: MainViewModel by viewModels()
-    private var imgSelectedPosition = 0
     private var observedListSize = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        val bind : ActivityMainBinding = DataBindingUtil.setContentView(this,
+            R.layout.activity_main
+        )
+
+        slideViewModel.setNewSlide()
+        bind.viewModel = slideViewModel
+        bind.activity = this
+        slideViewModel.slides.observe(this){
+            bind.viewModel = slideViewModel
+        }
+
+        slideViewModel.nowSlide.observe(this){
+            bind.slide = it
+        }
 
         init()
     }
@@ -65,26 +76,8 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
         binding.btnAddSlide.setOnClickListener(this)
         binding.btnAddSlide.setOnLongClickListener(this)
 
-        setObserver()
-        //slideViewModel.setNewSlide(slideType = SlideType.SQUARE)
-        setRecyclerView(slideViewModel.getSlides())
     }
 
-    fun setObserver() {
-        slideViewModel.nowSlide.observe(this) {
-            setSlideView(it)
-        }
-
-        slideViewModel.slides.observe(this) {
-            if(it.size != observedListSize){
-                binding.rvSlides.adapter?.notifyItemInserted(it.lastIndex)
-                binding.rvSlides.scrollToPosition(it.lastIndex)
-            } else {
-                binding.rvSlides.adapter?.notifyDataSetChanged()
-            }
-            observedListSize = it.size
-        }
-    }
 
     private fun setSlideView(slide: Slide) {
         when (slide) {
@@ -147,35 +140,18 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
     }
 
     private fun setRecyclerView(slides: List<Slide>) {
-        val slideAdapter =
-            SlideAdapter(slides as MutableList<Slide>, this@MainActivity, this@MainActivity)
-
-        with(binding.rvSlides) {
-            adapter = slideAdapter
-            layoutManager =
-                LinearLayoutManager(baseContext)
-
-            val itemMoveCallback = ItemMoveCallback(slideAdapter)
-            val itemTouchHelper = ItemTouchHelper(itemMoveCallback)
-            itemTouchHelper.attachToRecyclerView(this)
-        }
-    }
-
-    private fun setDrawingView(): DrawingView{
-        val drawView = DrawingView(this)
-        drawView.layoutParams = ViewGroup.LayoutParams(0, 0)
-        drawView.id = R.id.dv_drawing
-        binding.rootView.addView(drawView)
-
-        val constraintSet = ConstraintSet()
-        constraintSet.clone(binding.rootView)
-        constraintSet.connect(drawView.id, ConstraintSet.START, R.id.rv_slides, ConstraintSet.END)
-        constraintSet.connect(drawView.id, ConstraintSet.END, R.id.vw_control, ConstraintSet.START)
-        constraintSet.connect(drawView.id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
-        constraintSet.connect(drawView.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
-        constraintSet.setHorizontalWeight(drawView.id, 0.6f)
-        constraintSet.applyTo(binding.rootView)
-        return drawView
+//        val slideAdapter =
+//            SlideAdapter(slides as MutableList<Slide>, this@MainActivity)
+//
+//        with(binding.rvSlides) {
+//            adapter = slideAdapter
+//            layoutManager =
+//                LinearLayoutManager(baseContext)
+//
+//            val itemMoveCallback = ItemMoveCallback(slideAdapter)
+//            val itemTouchHelper = ItemTouchHelper(itemMoveCallback)
+//            itemTouchHelper.attachToRecyclerView(this)
+//        }
     }
 
     override fun onClick(view: View?) {
@@ -207,7 +183,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
             }
 
             R.id.btn_add_slide -> {
-                slideViewModel.setNewSlide(SlideType.values().random()) // 추후 랜덤으로 변경
+                slideViewModel.setNewSlide() // 추후 랜덤으로 변경
             }
         }
     }
@@ -222,10 +198,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
         }
     }
 
-    override fun onSlideSelected(position: Int, slide: Slide) {
-        slideViewModel.setSlideIndex(position)
-    }
-
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult())
         {
@@ -235,7 +207,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
                     if (imageUri != null) {
                         val byteImage = getByteArrayFromUri(baseContext, imageUri)
                         if (byteImage != null) {
-                            slideViewModel.editSlideImage(imgSelectedPosition, byteImage)
+                            slideViewModel.editSlideImage(slideViewModel.nowSlideIndex, byteImage)
                         }
                     }
                 }
@@ -255,7 +227,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
         }
     }
 
-    override fun onSlideDoubleClicked(position: Int, slide: Slide) {
+    override fun onSlideDoubleClicked(slide: Slide) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             checkPermission(android.Manifest.permission.READ_MEDIA_IMAGES)
         } else {
@@ -267,7 +239,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
             action = Intent.ACTION_GET_CONTENT
 //            setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
         }
-        imgSelectedPosition = position
         resultLauncher.launch(intent)
     }
 

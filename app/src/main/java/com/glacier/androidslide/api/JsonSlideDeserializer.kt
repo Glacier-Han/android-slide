@@ -1,9 +1,9 @@
 package com.glacier.androidslide.api
 
-import com.glacier.androidslide.model.ImageSlide
-import com.glacier.androidslide.model.Slide
-import com.glacier.androidslide.model.SlideColor
-import com.glacier.androidslide.model.SquareSlide
+import com.glacier.androidslide.data.model.ImageSlide
+import com.glacier.androidslide.data.model.Slide
+import com.glacier.androidslide.data.model.SlideColor
+import com.glacier.androidslide.data.model.SquareSlide
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
