@@ -7,6 +7,7 @@ android {
     namespace 'com.glacier.androidslide'
     compileSdk 33
     buildFeatures.viewBinding true
+    buildFeatures.dataBinding true
 
     defaultConfig {
         applicationId "com.glacier.androidslide"
