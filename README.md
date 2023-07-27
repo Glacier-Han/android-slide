@@ -51,3 +51,12 @@ Android 학습 프로젝트 #2
 > - 기존에는 observe중인 데이터가 바뀌면 ```adapter``` 자체를 새로 갱신했는데, 리사이클러뷰에서 ```notifyItemInserted``` 메소드를 실행하는 것으로 변경하니 버벅거림이 개선되었다.
 
 https://github.com/softeerbootcamp-2nd/android-slide/assets/61905052/58317a43-0664-4eed-a81f-d00cc0ac3877
+
+> ## 7. 드로잉 표시하기
+> 230727 PM 5:00
+> - 드로잉 뷰를 추가하기 위한 ```Model``` 및 ```Custom View``` 구현
+> - ```onTouchEvent```로부터 들어오는 ```ACTION_DOWN```/```ACTION_MOVE```/```ACTION_UP``` 트리거를 이용하여 그림 그리기
+> - ```ACTION_MOVE```시마다 좌표의 ```min/max```값을 계산하여 그린 그림의 테두리 만들기
+> - DataBinding으로 마이그레이션 완료
+> - xml에서 처리하기 곤란한 부분은 ```BindingAdapter``` 활용하여 처리하기
+
