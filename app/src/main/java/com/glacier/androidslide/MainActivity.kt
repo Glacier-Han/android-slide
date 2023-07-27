@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity(), OnSlideSelectedListener,
     OnSlideDoubleClickListener {
 
     private val slideViewModel: MainViewModel by viewModels()
+    private val CODE_PERMISSION_IMAGE = 1112
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity(), OnSlideSelectedListener,
                 permission
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            requestPermissions(arrayOf(permission), 1112)
+            requestPermissions(arrayOf(permission), CODE_PERMISSION_IMAGE)
         }
     }
 

@@ -3,16 +3,13 @@ package com.glacier.androidslide.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.view.GestureDetector
 import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.glacier.androidslide.R
 import com.glacier.androidslide.data.enums.SlideType
 import com.glacier.androidslide.data.model.DrawingSlide
@@ -23,14 +20,14 @@ import com.glacier.androidslide.databinding.ItemSlideDrawingBinding
 import com.glacier.androidslide.databinding.ItemSlideImageBinding
 import com.glacier.androidslide.databinding.ItemSlideSquareBinding
 import com.glacier.androidslide.listener.ItemMoveListener
-import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
 
 class SlideAdapter(
     private val slides: MutableList<Slide>,
     private val listener: OnSlideSelectedListener,
 ) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemMoveListener {
+    RecyclerView.Adapter<ViewHolder>(), ItemMoveListener {
+    private var popupMenu: PopupMenu? = null
 
     companion object {
         private const val VIEW_TYPE_SQUARE = 0
@@ -38,23 +35,15 @@ class SlideAdapter(
         private const val VIEW_TYPE_DRAWING = 2
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            VIEW_TYPE_SQUARE -> SquareSlideViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_slide_square, parent, false))
-            VIEW_TYPE_IMAGE -> ImageSlideViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_slide_image, parent, false))
-            VIEW_TYPE_DRAWING -> DrawingSlideViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.context), R.layout.item_slide_drawing, parent, false))
-            else -> throw IllegalArgumentException("Invalid ViewType")
-        }
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val slide = slides[position]
-
-        holder.itemView.setOnLongClickListener {
-            val context = holder.itemView.context
-            PopupMenu(context, holder.itemView).apply {
+    private fun showPopUpMenu(viewHolder: ViewHolder, position: Int) {
+        val context = viewHolder.itemView.context
+        if (popupMenu == null) {
+            popupMenu = PopupMenu(context, viewHolder.itemView).apply {
                 menuInflater.inflate(R.menu.slide_item_menu, menu)
-                setOnMenuItemClickListener { item ->
+            }
+        } else {
+            popupMenu?.let {
+                it.setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.menu_hard_back -> {
                             showToast(
@@ -113,9 +102,46 @@ class SlideAdapter(
                         else -> false
                     }
                 }
-                show()
             }
+            popupMenu?.show()
+        }
+    }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return when (viewType) {
+            VIEW_TYPE_SQUARE -> SquareSlideViewHolder(
+                DataBindingUtil.inflate(
+                    LayoutInflater.from(
+                        parent.context
+                    ), R.layout.item_slide_square, parent, false
+                )
+            )
+
+            VIEW_TYPE_IMAGE -> ImageSlideViewHolder(
+                DataBindingUtil.inflate(
+                    LayoutInflater.from(
+                        parent.context
+                    ), R.layout.item_slide_image, parent, false
+                )
+            )
+
+            VIEW_TYPE_DRAWING -> DrawingSlideViewHolder(
+                DataBindingUtil.inflate(
+                    LayoutInflater.from(
+                        parent.context
+                    ), R.layout.item_slide_drawing, parent, false
+                )
+            )
+
+            else -> throw IllegalArgumentException("Invalid ViewType")
+        }
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val slide = slides[position]
+
+        holder.itemView.setOnLongClickListener {
+            showPopUpMenu(holder, position)
             return@setOnLongClickListener true
         }
 
@@ -161,7 +187,7 @@ class SlideAdapter(
     }
 
     inner class SquareSlideViewHolder(private val binding: ItemSlideSquareBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        ViewHolder(binding.root) {
         fun bind(squareSlide: SquareSlide) {
             binding.slideIndex = adapterPosition + 1
             binding.colorTint = Color.argb(
@@ -178,7 +204,7 @@ class SlideAdapter(
     }
 
     inner class ImageSlideViewHolder(private val binding: ItemSlideImageBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        ViewHolder(binding.root) {
         fun bind(imageSlide: ImageSlide) {
             binding.slideIndex = adapterPosition + 1
             binding.slide = imageSlide
@@ -188,12 +214,11 @@ class SlideAdapter(
             }
 
 
-
         }
     }
 
     inner class DrawingSlideViewHolder(private val binding: ItemSlideDrawingBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        ViewHolder(binding.root) {
         fun bind(drawingSlide: DrawingSlide) {
             binding.slideIndex = adapterPosition + 1
             itemView.setOnClickListener {
