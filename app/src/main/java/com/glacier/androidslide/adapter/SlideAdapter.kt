@@ -3,6 +3,7 @@ package com.glacier.androidslide.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -142,7 +143,7 @@ class SlideAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val slide = slides[position]
-        return when (slide.slideType) {
+        return when (slide.type) {
             SlideType.SQUARE -> VIEW_TYPE_SQUARE
             SlideType.IMAGE -> VIEW_TYPE_IMAGE
         }
@@ -154,6 +155,7 @@ class SlideAdapter(
         slides.removeAt(fromPosition)
         slides.add(toPosition, slide)
 
+        Log.d("DTEST", "TEST")
         notifyItemMoved(fromPosition, toPosition)
         notifyItemChanged(fromPosition)
         notifyItemChanged(toPosition)
@@ -173,9 +175,9 @@ class SlideAdapter(
             binding.ivSlide.setColorFilter(
                 Color.argb(
                     squareSlide.alpha,
-                    squareSlide.r,
-                    squareSlide.g,
-                    squareSlide.b
+                    squareSlide.color.r,
+                    squareSlide.color.g,
+                    squareSlide.color.b
                 )
             )
         }
@@ -185,8 +187,7 @@ class SlideAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(imageSlide: ImageSlide) {
             // todo: 이미지 슬라이드 처리하기
-            Glide.with(binding.root.context).load(imageSlide.image)
-                .error(R.drawable.outline_image_24).override(50, 50).into(binding.ivSlide)
+            Glide.with(binding.root.context).load(imageSlide.image).error(R.drawable.outline_image_24).override(50,50).into(binding.ivSlide)
 
             itemView.setOnClickListener {
                 listener.onSlideSelected(adapterPosition, imageSlide)
@@ -194,17 +195,12 @@ class SlideAdapter(
 
             itemView.setOnTouchListener(object : View.OnTouchListener {
                 private val gestureDetector =
-                    GestureDetector(
-                        itemView.context,
-                        object : GestureDetector.SimpleOnGestureListener() {
-                            override fun onDoubleTap(e: MotionEvent): Boolean {
-                                doubleClickListener.onSlideDoubleClicked(
-                                    adapterPosition,
-                                    slides[adapterPosition]
-                                )
-                                return true
-                            }
-                        })
+                    GestureDetector(itemView.context, object : GestureDetector.SimpleOnGestureListener() {
+                        override fun onDoubleTap(e: MotionEvent): Boolean {
+                            doubleClickListener.onSlideDoubleClicked(adapterPosition, slides[adapterPosition])
+                            return true
+                        }
+                    })
 
                 override fun onTouch(v: View?, event: MotionEvent): Boolean {
                     return gestureDetector.onTouchEvent(event)

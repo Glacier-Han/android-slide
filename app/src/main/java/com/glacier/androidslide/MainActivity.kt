@@ -1,6 +1,5 @@
 package com.glacier.androidslide
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,49 +12,42 @@ import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.view.View.OnClickListener
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
 import com.glacier.androidslide.adapter.SlideAdapter
 import com.glacier.androidslide.databinding.ActivityMainBinding
-import com.glacier.androidslide.databinding.ItemSlideImageBinding
-import com.glacier.androidslide.databinding.ItemSlideSquareBinding
 import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
 import com.glacier.androidslide.model.ImageSlide
 import com.glacier.androidslide.model.Slide
-import com.glacier.androidslide.util.Mode
-import com.glacier.androidslide.util.UtilManager
 import com.glacier.androidslide.model.SquareSlide
 import com.glacier.androidslide.util.ItemMoveCallback
+import com.glacier.androidslide.util.Mode
 import com.glacier.androidslide.util.SlideType
+import com.glacier.androidslide.util.UtilManager
 import com.glacier.androidslide.viewmodel.MainViewModel
+import jp.wasabeef.glide.transformations.ColorFilterTransformation
 import java.io.IOException
 
-class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListener,
+class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListener,
+    OnSlideSelectedListener,
     OnSlideDoubleClickListener {
-
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val slideViewModel: MainViewModel by viewModels()
     private var imgSelectedPosition = 0
+    private var observedListSize = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +63,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
         binding.btnAlphaMinus.setOnClickListener(this)
         binding.btnAlphaPlus.setOnClickListener(this)
         binding.btnAddSlide.setOnClickListener(this)
+        binding.btnAddSlide.setOnLongClickListener(this)
 
         setObserver()
         //slideViewModel.setNewSlide(slideType = SlideType.SQUARE)
@@ -79,11 +72,18 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
 
     fun setObserver() {
         slideViewModel.nowSlide.observe(this) {
+            Log.d("TEST", it.alpha.toString())
             setSlideView(it)
         }
 
         slideViewModel.slides.observe(this) {
-            setRecyclerView(it)
+            if(it.size != observedListSize){
+                binding.rvSlides.adapter?.notifyItemInserted(it.lastIndex)
+                binding.rvSlides.scrollToPosition(it.lastIndex)
+            } else {
+                binding.rvSlides.adapter?.notifyDataSetChanged()
+            }
+            observedListSize = it.size
         }
     }
 
@@ -101,13 +101,14 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
                     applyTo(binding.rootView)
                 }
 
+                val sColor = slide.color
                 binding.ivSlide.setImageDrawable(
-                    ColorDrawable(Color.argb(slide.alpha, slide.r, slide.g, slide.b))
+                    ColorDrawable(Color.argb(slide.alpha, sColor.r, sColor.g, sColor.b))
                 )
                 binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(slide.alpha).toString()
-                binding.btnBgcolor.text = UtilManager.rgbToHex(slide.r, slide.g, slide.b)
+                binding.btnBgcolor.text = UtilManager.rgbToHex(sColor.r, sColor.g, sColor.b)
                 binding.btnBgcolor.isEnabled = true
-                setBgColorBtnColor(slide.alpha, slide.r, slide.g, slide.b)
+                setBgColorBtnColor(slide.alpha, sColor.r, sColor.g, sColor.b)
             }
 
             is ImageSlide -> {
@@ -117,7 +118,9 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
                     applyTo(binding.rootView)
                 }
 
-                Glide.with(applicationContext).load(slide.image).error(R.drawable.outline_image_24)
+                Glide.with(applicationContext).load(slide.image)
+                    .transform(ColorFilterTransformation(Color.argb(255 - slide.alpha, 255, 255, 255)))
+                    .error(R.drawable.outline_image_24)
                     .into(binding.ivSlide)
 
                 binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(slide.alpha).toString()
@@ -195,6 +198,16 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
         }
     }
 
+    fun checkPermission(permission: String) {
+        if (ActivityCompat.checkSelfPermission(
+                applicationContext,
+                permission
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(arrayOf(permission), 1112)
+        }
+    }
+
     override fun onSlideSelected(position: Int, slide: Slide) {
         slideViewModel.setSlideIndex(position)
     }
@@ -236,10 +249,21 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
         }
 
         val intent = Intent(Intent.ACTION_PICK).apply {
-            setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+            type = "image/*"
+            action = Intent.ACTION_GET_CONTENT
+//            setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
         }
         imgSelectedPosition = position
         resultLauncher.launch(intent)
     }
 
+    override fun onLongClick(view: View?): Boolean {
+        when (view?.id) {
+            R.id.btn_add_slide -> {
+                Log.d("DBG::RETROFIT", "sended")
+                slideViewModel.getJsonSlides()
+            }
+        }
+        return true
+    }
 }
