@@ -4,42 +4,28 @@ import android.view.View.VISIBLE
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View.GONE
-<<<<<<< HEAD
 import android.view.View.OnClickListener
 import android.view.ViewGroup
-=======
-import android.view.View.VISIBLE
->>>>>>> 4b4c4b1 (refactor: 데이터 바인딩 사용하게 리팩토링완료)
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
-import com.bumptech.glide.Glide
-import com.glacier.androidslide.data.model.DrawingSlide
-import com.glacier.androidslide.data.model.ImageSlide
 import com.glacier.androidslide.data.model.Slide
-import com.glacier.androidslide.data.model.SquareSlide
 import com.glacier.androidslide.databinding.ActivityMainBinding
 import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
-import com.glacier.androidslide.util.UtilManager
 import com.glacier.androidslide.viewmodel.MainViewModel
-import jp.wasabeef.glide.transformations.ColorFilterTransformation
 import java.io.IOException
 
 class MainActivity : AppCompatActivity(), OnSlideSelectedListener,
     OnSlideDoubleClickListener {
 
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val slideViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,60 +45,6 @@ class MainActivity : AppCompatActivity(), OnSlideSelectedListener,
             bind.slide = it
         }
 
-    }
-
-
-    private fun setSlideView(slide: Slide) {
-        when (slide) {
-            is SquareSlide -> {
-                ConstraintSet().apply {
-                    clone(binding.rootView)
-                    connect(
-                        binding.ivSlide.id,
-                        ConstraintSet.BOTTOM,
-                        binding.rootView.id,
-                        ConstraintSet.BOTTOM
-                    )
-                    applyTo(binding.rootView)
-                }
-
-                val sColor = slide.color
-                binding.ivSlide.setImageDrawable(
-                    ColorDrawable(Color.argb(slide.alpha, sColor.r, sColor.g, sColor.b))
-                )
-                binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(slide.alpha).toString()
-                binding.btnBgcolor.text = UtilManager.rgbToHex(sColor.r, sColor.g, sColor.b)
-                binding.btnBgcolor.isEnabled = true
-                binding.ivSlide.visibility = VISIBLE
-                binding.dvDrawing.visibility = GONE
-            }
-
-            is ImageSlide -> {
-                ConstraintSet().apply {
-                    clone(binding.rootView)
-                    clear(binding.ivSlide.id, ConstraintSet.BOTTOM)
-                    applyTo(binding.rootView)
-                }
-
-                Glide.with(applicationContext).load(slide.image)
-                    .transform(ColorFilterTransformation(Color.argb(255 - slide.alpha, 255, 255, 255)))
-                    .error(R.drawable.outline_image_24)
-                    .into(binding.ivSlide)
-
-                binding.tvAlphaMonitor.text = UtilManager.getAlphaToMode(slide.alpha).toString()
-                binding.btnBgcolor.text = getString(R.string.text_image)
-                binding.btnBgcolor.isEnabled = false
-                binding.ivSlide.visibility = VISIBLE
-                binding.dvDrawing.visibility = GONE
-            }
-
-            is DrawingSlide -> {
-                binding.btnBgcolor.text = getString(R.string.text_drawing)
-                binding.ivSlide.visibility = GONE
-                binding.dvDrawing.visibility = VISIBLE
-                binding.dvDrawing.setSlide(slide)
-            }
-        }
     }
 
     fun checkPermission(permission: String) {
