@@ -1,4 +1,4 @@
-package com.glacier.androidslide
+package com.glacier.androidslide.ui
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,6 +8,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.glacier.androidslide.R
 import com.glacier.androidslide.data.model.DrawingSlide
 import com.glacier.androidslide.util.UtilManager
 

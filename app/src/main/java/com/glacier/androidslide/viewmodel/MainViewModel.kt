@@ -3,7 +3,7 @@ package com.glacier.androidslide.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
-import com.glacier.androidslide.SlideManager
+import com.glacier.androidslide.util.SlideManager
 import com.glacier.androidslide.adapter.SlideAdapter
 import com.glacier.androidslide.api.JsonSlideApi
 import com.glacier.androidslide.api.RetrofitInstance

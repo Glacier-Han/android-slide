@@ -1,7 +1,6 @@
 package com.glacier.androidslide
 
-import android.transition.Slide
-import com.glacier.androidslide.model.SquareSlide
+import com.glacier.androidslide.util.SlideManager
 import org.junit.Assert.*
 
 import org.junit.Before

@@ -1,4 +1,4 @@
-package com.glacier.androidslide
+package com.glacier.androidslide.util
 
 import com.glacier.androidslide.data.enums.SlideType
 import com.glacier.androidslide.data.factory.SquareSlideViewFactory

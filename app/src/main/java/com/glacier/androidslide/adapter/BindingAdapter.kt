@@ -1,4 +1,4 @@
-package com.glacier.androidslide
+package com.glacier.androidslide.adapter
 
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -10,17 +10,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.glacier.androidslide.adapter.SlideAdapter
+import com.glacier.androidslide.R
 import com.glacier.androidslide.data.model.DrawingSlide
 import com.glacier.androidslide.data.model.ImageSlide
 import com.glacier.androidslide.data.model.Slide
 import com.glacier.androidslide.data.model.SquareSlide
 import com.glacier.androidslide.listener.OnSlideDoubleClickListener
+import com.glacier.androidslide.ui.DrawingView
+import com.glacier.androidslide.ui.MainActivity
 import com.glacier.androidslide.util.ItemMoveCallback
 import com.glacier.androidslide.util.UtilManager
 import com.glacier.androidslide.viewmodel.MainViewModel

@@ -1,4 +1,4 @@
-package com.glacier.androidslide
+package com.glacier.androidslide.ui
 
 import android.content.Context
 import android.content.Intent
@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import com.glacier.androidslide.R
 import com.glacier.androidslide.data.model.Slide
 import com.glacier.androidslide.databinding.ActivityMainBinding
 import com.glacier.androidslide.listener.OnSlideDoubleClickListener

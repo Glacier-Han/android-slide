@@ -7,7 +7,7 @@
 
         <variable
             name="activity"
-            type="com.glacier.androidslide.MainActivity" />
+            type="com.glacier.androidslide.ui.MainActivity" />
 
         <variable
             name="viewModel"
@@ -87,7 +87,7 @@
             app:layout_constraintTop_toTopOf="@id/main_view"
             app:setSlide="@{viewModel.nowSlide}"/>
 
-        <com.glacier.androidslide.DrawingView
+        <com.glacier.androidslide.ui.DrawingView
             android:id="@+id/dv_drawing"
             android:layout_width="0dp"
             android:layout_height="0dp"
