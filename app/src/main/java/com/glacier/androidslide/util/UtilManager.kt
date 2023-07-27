@@ -1,5 +1,7 @@
 package com.glacier.androidslide.util
 
+import com.glacier.androidslide.data.model.ImageSlide
+import com.glacier.androidslide.data.model.SquareSlide
 import kotlin.random.Random
 
 
@@ -53,6 +55,18 @@ class UtilManager {
             return  reversedAlphaMap[alpha]!!
         }
 
+        fun SlideManager.copy(): SlideManager {
+            val copiedSlideList = this.getAllSlides().map { slide ->
+                when (slide) {
+                    is SquareSlide -> slide.copy()
+                    is ImageSlide -> slide.copy()
+                    else -> slide
+                }
+            }.toMutableList()
 
+            val copiedManager = SlideManager()
+            copiedManager.slideList.addAll(copiedSlideList)
+            return copiedManager
+        }
     }
 }

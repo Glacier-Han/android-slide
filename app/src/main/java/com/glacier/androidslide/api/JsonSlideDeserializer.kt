@@ -1,5 +1,8 @@
 package com.glacier.androidslide.api
 
+import android.graphics.Paint
+import android.graphics.Path
+import com.glacier.androidslide.data.model.DrawingSlide
 import com.glacier.androidslide.data.model.ImageSlide
 import com.glacier.androidslide.data.model.Slide
 import com.glacier.androidslide.data.model.SlideColor
@@ -17,8 +20,8 @@ class JsonSlideDeserializer : JsonDeserializer<Slide> {
         context: JsonDeserializationContext?
     ): Slide {
         val jsonObject = json?.asJsonObject
-        return when (val slideType = jsonObject?.get("type")?.asString) {
-            "Image" -> context?.deserialize(jsonObject, ImageSlide::class.java) ?: ImageSlide(
+        return when (val slideType = jsonObject?.get("type")?.asString?.uppercase()) {
+            "IMAGE" -> context?.deserialize(jsonObject, ImageSlide::class.java) ?: ImageSlide(
                 "",
                 0,
                 0,
@@ -27,13 +30,23 @@ class JsonSlideDeserializer : JsonDeserializer<Slide> {
                 ""
             )
 
-
-            "Square" -> context?.deserialize(jsonObject, SquareSlide::class.java) ?: SquareSlide(
+            "SQUARE" -> context?.deserialize(jsonObject, SquareSlide::class.java) ?: SquareSlide(
                 "",
                 0,
                 0,
                 false,
                 SlideColor(0, 0, 0)
+            )
+
+            "DRAWING" -> context?.deserialize(jsonObject, DrawingSlide::class.java) ?: DrawingSlide(
+                "",
+                0,
+                0,
+                false,
+                Path(),
+                true,
+                Paint(),
+                0f,0f,0f,0f
             )
 
             else -> throw JsonParseException("ERR: NO $slideType MODEL")

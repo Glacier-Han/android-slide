@@ -213,6 +213,21 @@
             app:layout_constraintStart_toEndOf="@id/btn_alpha_minus"
             app:layout_constraintTop_toTopOf="@id/tv_alpha_monitor" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_newproj"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#E89924"
+            android:text="@string/text_new_proj"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:onClick="@{() -> viewModel.resetSlide()}"
+            app:layout_constraintEnd_toEndOf="@id/vw_control"
+            app:layout_constraintStart_toStartOf="@id/vw_control"
+            app:layout_constraintTop_toBottomOf="@id/tv_alpha_monitor" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

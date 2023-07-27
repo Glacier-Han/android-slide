@@ -17,6 +17,7 @@ import com.glacier.androidslide.data.model.Slide
 import com.glacier.androidslide.databinding.ActivityMainBinding
 import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
+import com.glacier.androidslide.util.SlideSaveManager
 import com.glacier.androidslide.viewmodel.MainViewModel
 import java.io.IOException
 
@@ -32,7 +33,6 @@ class MainActivity : AppCompatActivity(), OnSlideSelectedListener,
             R.layout.activity_main
         )
 
-        slideViewModel.setNewSlide()
         bind.viewModel = slideViewModel
         bind.activity = this
         slideViewModel.slides.observe(this){
@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity(), OnSlideSelectedListener,
         slideViewModel.nowSlide.observe(this){
             bind.slide = it
         }
+
 
     }
 
@@ -102,5 +103,27 @@ class MainActivity : AppCompatActivity(), OnSlideSelectedListener,
         slideViewModel.nowSlideIndex = position
         slideViewModel.setSlideIndex(position)
     }
+
+    override fun onResume() {
+        super.onResume()
+        slideViewModel.restoreSlides()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        slideViewModel.saveSlides()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        slideViewModel.setSlidesData(SlideSaveManager(applicationContext).getSlideList())
+    }
+
+    override fun onStop() {
+        super.onStop()
+        slideViewModel.slides.value?.let { SlideSaveManager(applicationContext).saveSlideList(it) }
+    }
+
+
 
 }

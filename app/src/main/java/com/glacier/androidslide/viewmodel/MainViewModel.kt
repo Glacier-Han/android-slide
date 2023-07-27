@@ -1,9 +1,9 @@
 package com.glacier.androidslide.viewmodel
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
-import com.glacier.androidslide.util.SlideManager
 import com.glacier.androidslide.adapter.SlideAdapter
 import com.glacier.androidslide.api.JsonSlideApi
 import com.glacier.androidslide.api.RetrofitInstance
@@ -14,6 +14,7 @@ import com.glacier.androidslide.data.model.JsonSlides
 import com.glacier.androidslide.data.model.Slide
 import com.glacier.androidslide.data.model.SquareSlide
 import com.glacier.androidslide.util.ItemMoveCallback
+import com.glacier.androidslide.util.SlideManager
 import com.glacier.androidslide.util.UtilManager
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -21,7 +22,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class MainViewModel : ViewModel(){
-    private val slideManager = SlideManager()
+    private var slideManager = SlideManager()
 
     var nowAlpha: Int = 10
     var nowSlideIndex: Int = 0
@@ -34,6 +35,8 @@ class MainViewModel : ViewModel(){
 
     private val _doubleClickEvent = MutableLiveData<Boolean>()
     val doubleClickEvent = _doubleClickEvent
+
+    private val savedStateHandle = SavedStateHandle()
 
     fun getNowSlideData() {
         _nowSlide.value = slideManager.getSlideByIndex(nowSlideIndex)
@@ -53,6 +56,14 @@ class MainViewModel : ViewModel(){
     fun setSlideIndex(index: Int) {
         nowSlideIndex = index
         getSlideWithIndex(index)
+    }
+
+    fun setSlidesData(slides: List<Slide>) {
+        setNewSlide()
+        if(slides.isNotEmpty()){
+            slideManager.slideList = slides as MutableList<Slide>
+        }
+        getSlidesData()
     }
 
     fun editAlpha(mode: Mode) {
@@ -182,6 +193,25 @@ class MainViewModel : ViewModel(){
         _doubleClickEvent.value = true
     }
 
+    fun restoreSlides(){
+        val savedSlides = savedStateHandle.get<List<Slide>>(KEY_SLIDE_STATE)
+        savedSlides?.let { slides ->
+            slideManager.slideList = slides as MutableList<Slide>
+        }
 
+    }
+
+    fun saveSlides(){
+        savedStateHandle[KEY_SLIDE_STATE] = slideManager.slideList
+    }
+
+    fun resetSlide(){
+        slideManager.resetSlide()
+        slideManager.createSlide(0,0,0,255,ByteArray(0),SlideType.values().random())
+    }
+
+    companion object {
+        private const val KEY_SLIDE_STATE = "KEY_SLIDE_STATE"
+    }
 
 }

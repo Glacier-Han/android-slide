@@ -1,6 +1,5 @@
 package com.glacier.androidslide
 
-import com.glacier.androidslide.util.SlideManager
 import org.junit.Assert.*
 
 import org.junit.Before

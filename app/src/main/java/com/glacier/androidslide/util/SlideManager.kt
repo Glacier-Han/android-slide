@@ -8,7 +8,7 @@ import com.glacier.androidslide.data.model.SlideColor
 import com.glacier.androidslide.data.model.SquareSlide
 
 class SlideManager() {
-    private val slideList: MutableList<Slide> = mutableListOf()
+    var slideList: MutableList<Slide> = mutableListOf()
 
     fun createSlide(r: Int, g: Int, b: Int, alpha: Int, image: ByteArray, slideType: SlideType): Slide {
         val newSlide = SquareSlideViewFactory.createItem(r, g, b, alpha, image, slideType)
@@ -63,5 +63,9 @@ class SlideManager() {
             val slide = slideList[index] as ImageSlide
             slideList[index] = slide.copy(image = image)
         }
+    }
+
+    fun resetSlide(){
+        slideList.clear()
     }
 }
