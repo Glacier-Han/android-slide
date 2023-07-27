@@ -5,17 +5,20 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.ColorFilter
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.provider.MediaStore
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
@@ -152,12 +155,14 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
         when (view?.id) {
             R.id.iv_slide -> {
                 slideViewModel.setNowSlideSelected(true)
+
                 binding.ivSlide.background =
                     AppCompatResources.getDrawable(baseContext, R.drawable.border_black)
             }
 
             R.id.main_view -> {
                 slideViewModel.setNowSlideSelected(false)
+
                 binding.tvAlphaMonitor.text = ""
                 binding.btnBgcolor.text = ""
                 binding.ivSlide.background =
@@ -179,6 +184,17 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
             R.id.btn_add_slide -> {
                 slideViewModel.setNewSlide(SlideType.values().random()) // 추후 랜덤으로 변경
             }
+        }
+
+    }
+
+    fun checkPermission(permission: String) {
+        if (ActivityCompat.checkSelfPermission(
+                applicationContext,
+                permission
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(arrayOf(permission), 1112)
         }
     }
 
@@ -250,5 +266,4 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
         }
         return true
     }
-
 }

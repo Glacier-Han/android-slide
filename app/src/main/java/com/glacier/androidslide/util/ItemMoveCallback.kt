@@ -30,7 +30,6 @@ class ItemMoveCallback(private val listener: ItemMoveListener) :
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        Log.d("DBG::DRAG","MOVE ${viewHolder.adapterPosition} ${target.adapterPosition}")
         listener.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
         return true
     }

@@ -38,14 +38,15 @@ class SlideAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = when (viewType) {
-            VIEW_TYPE_SQUARE -> ItemSlideSquareBinding.inflate(inflater, parent, false)
-            VIEW_TYPE_IMAGE -> ItemSlideImageBinding.inflate(inflater, parent, false)
-            else -> throw IllegalArgumentException("Invalid ViewType")
-        }
         return when (viewType) {
-            VIEW_TYPE_SQUARE -> SquareSlideViewHolder(binding as ItemSlideSquareBinding)
-            VIEW_TYPE_IMAGE -> ImageSlideViewHolder(binding as ItemSlideImageBinding)
+            VIEW_TYPE_SQUARE -> {
+                SquareSlideViewHolder(ItemSlideSquareBinding.inflate(inflater, parent, false))
+            }
+
+            VIEW_TYPE_IMAGE -> {
+                ImageSlideViewHolder(ItemSlideImageBinding.inflate(inflater, parent, false))
+            }
+
             else -> throw IllegalArgumentException("Invalid ViewType")
         }
     }
