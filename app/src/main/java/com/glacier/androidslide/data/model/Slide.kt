@@ -2,7 +2,7 @@ package com.glacier.androidslide.data.model
 
 import com.glacier.androidslide.data.enums.SlideType
 
-interface Slide {
+sealed interface Slide {
     val type: SlideType
     val id: String
     val size: Int

@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_hard_back"
-        android:title="맨 뒤로 보내기" />
+        android:title="@string/menu_toast_hard_back" />
     <item
         android:id="@+id/menu_back"
-        android:title="뒤로 보내기" />
+        android:title="@string/menu_toast_back" />
     <item
         android:id="@+id/menu_hard_front"
-        android:title="맨 앞으로 보내기" />
+        android:title="@string/menu_toast_hard_front" />
     <item
         android:id="@+id/menu_front"
-        android:title="앞으로 보내기" />
+        android:title="@string/menu_toast_front" />
 
 </menu>

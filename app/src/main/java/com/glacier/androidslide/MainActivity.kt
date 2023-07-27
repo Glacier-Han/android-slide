@@ -3,30 +3,21 @@ package com.glacier.androidslide
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.view.View.GONE
-import android.view.View.OnClickListener
 import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.glacier.androidslide.adapter.SlideAdapter
-import com.glacier.androidslide.data.enums.Mode
-import com.glacier.androidslide.data.enums.SlideType
 import com.glacier.androidslide.data.model.DrawingSlide
 import com.glacier.androidslide.data.model.ImageSlide
 import com.glacier.androidslide.data.model.Slide
@@ -34,13 +25,12 @@ import com.glacier.androidslide.data.model.SquareSlide
 import com.glacier.androidslide.databinding.ActivityMainBinding
 import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
-import com.glacier.androidslide.util.ItemMoveCallback
 import com.glacier.androidslide.util.UtilManager
 import com.glacier.androidslide.viewmodel.MainViewModel
 import jp.wasabeef.glide.transformations.ColorFilterTransformation
 import java.io.IOException
 
-class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListener,
+class MainActivity : AppCompatActivity(), OnSlideSelectedListener,
     OnSlideDoubleClickListener {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -62,13 +52,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
         slideViewModel.nowSlide.observe(this){
             bind.slide = it
         }
-
-        init()
-    }
-
-    fun init() {
-        binding.ivSlide.setOnClickListener(this)
-        binding.mainView.setOnClickListener(this)
 
     }
 
@@ -126,25 +109,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
         }
     }
 
-    override fun onClick(view: View?) {
-        when (view?.id) {
-            R.id.iv_slide -> {
-                slideViewModel.setNowSlideSelected(true)
-                binding.ivSlide.background =
-                    AppCompatResources.getDrawable(baseContext, R.drawable.border_black)
-            }
-
-            R.id.main_view -> {
-                slideViewModel.setNowSlideSelected(false)
-                binding.tvAlphaMonitor.text = ""
-                binding.btnBgcolor.text = ""
-                binding.ivSlide.background =
-                    AppCompatResources.getDrawable(baseContext, R.drawable.border_null)
-            }
-
-        }
-    }
-
     fun checkPermission(permission: String) {
         if (ActivityCompat.checkSelfPermission(
                 applicationContext,
@@ -178,7 +142,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
             inputStream?.close()
             byteArray
         } catch (e: IOException) {
-            Toast.makeText(applicationContext, "ERROR: 사진을 불러오는데 실패하였습니다!", Toast.LENGTH_SHORT)
+            Toast.makeText(applicationContext, getString(R.string.error_msg_imageload), Toast.LENGTH_SHORT)
                 .show()
             null
         }
@@ -200,7 +164,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListen
 
     override fun onSlideSelected(position: Int, slide: Slide) {
         slideViewModel.nowSlideIndex = position
-        slideViewModel.getSlideWithIndex(position)
+        slideViewModel.setSlideIndex(position)
     }
 
 }

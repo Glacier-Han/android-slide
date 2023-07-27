@@ -1,6 +1,5 @@
 package com.glacier.androidslide.util
 
-import android.util.Log
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.glacier.androidslide.listener.ItemMoveListener

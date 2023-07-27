@@ -1,11 +1,5 @@
 package com.glacier.androidslide.viewmodel
 
-import android.media.browse.MediaBrowser.ItemCallback
-import android.util.Log
-import android.view.GestureDetector
-import android.view.MotionEvent
-import android.view.View
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
@@ -19,8 +13,6 @@ import com.glacier.androidslide.data.model.ImageSlide
 import com.glacier.androidslide.data.model.JsonSlides
 import com.glacier.androidslide.data.model.Slide
 import com.glacier.androidslide.data.model.SquareSlide
-import com.glacier.androidslide.listener.OnSlideDoubleClickListener
-import com.glacier.androidslide.listener.OnSlideSelectedListener
 import com.glacier.androidslide.util.ItemMoveCallback
 import com.glacier.androidslide.util.UtilManager
 import okhttp3.ResponseBody
@@ -151,6 +143,8 @@ class MainViewModel : ViewModel(){
                                     SlideType.SQUARE
                                 )
                             }
+
+                            else -> {}
                         }
                     }
 
@@ -172,7 +166,6 @@ class MainViewModel : ViewModel(){
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if (response.isSuccessful) {
                     response.body()?.bytes()?.let { image ->
-                        Log.d("TEST",image.toString())
                         slideManager.createSlide(0, 0, 0, 255, image, SlideType.IMAGE)
                         getNowSlideData()
                         getSlidesData()
@@ -187,7 +180,6 @@ class MainViewModel : ViewModel(){
 
     fun onDoubleClick() {
         _doubleClickEvent.value = true
-
     }
 
 
