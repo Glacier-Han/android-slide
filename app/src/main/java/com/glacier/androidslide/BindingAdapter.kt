@@ -1,22 +1,16 @@
 package com.glacier.androidslide
 
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
-import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.requestPermissions
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +23,7 @@ import com.glacier.androidslide.data.model.SquareSlide
 import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.util.ItemMoveCallback
 import com.glacier.androidslide.util.UtilManager
+import com.glacier.androidslide.viewmodel.MainViewModel
 import jp.wasabeef.glide.transformations.ColorFilterTransformation
 
 @BindingAdapter("colorTint")
@@ -48,13 +43,13 @@ fun onDoubleClicked(
     doubleClickListener: OnSlideDoubleClickListener,
     slide: Slide
 ) {
-    Log.d("TEST", "TEST")
-    val gestureDetector = GestureDetector(view.context, object : GestureDetector.SimpleOnGestureListener() {
-        override fun onDoubleTap(e: MotionEvent): Boolean {
-            doubleClickListener.onSlideDoubleClicked(slide)
-            return true
-        }
-    })
+    val gestureDetector =
+        GestureDetector(view.context, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onDoubleTap(e: MotionEvent): Boolean {
+                doubleClickListener.onSlideDoubleClicked(slide)
+                return true
+            }
+        })
 
     view.setOnTouchListener { _, event ->
         gestureDetector.onTouchEvent(event)
@@ -64,7 +59,11 @@ fun onDoubleClicked(
 
 @BindingAdapter("setSlide")
 fun setSlide(view: ImageView, slide: Slide) {
-    Log.d("TEST", "test")
+    if(slide.selected){
+        view.setBackgroundResource(R.drawable.border_black)
+    }else{
+        view.setBackgroundResource(R.drawable.border_null)
+    }
 
     when (slide) {
         is SquareSlide -> {
@@ -90,8 +89,8 @@ fun setSlide(view: ImageView, slide: Slide) {
 }
 
 @BindingAdapter("slide")
-fun setDrawingView(view: DrawingView, slide: Slide){
-    if(slide is DrawingSlide){
+fun setDrawingView(view: DrawingView, slide: Slide) {
+    if (slide is DrawingSlide) {
         view.setSlide(slide)
     }
 }
@@ -113,11 +112,18 @@ fun setAdapter(view: RecyclerView, slides: MutableList<Slide>, activity: MainAct
 
 @BindingAdapter("bgColor")
 fun setBgColor(view: AppCompatButton, slide: Slide) {
-    if(slide is SquareSlide){
+    if (slide is SquareSlide) {
         view.text = UtilManager.rgbToHex(slide.color.r, slide.color.g, slide.color.b)
         view.backgroundTintList =
-            ColorStateList.valueOf(Color.argb(slide.alpha, slide.color.r, slide.color.g, slide.color.b))
-    }else{
+            ColorStateList.valueOf(
+                Color.argb(
+                    slide.alpha,
+                    slide.color.r,
+                    slide.color.g,
+                    slide.color.b
+                )
+            )
+    } else {
         view.text = ""
         view.backgroundTintList =
             ColorStateList.valueOf(Color.LTGRAY)
@@ -125,25 +131,59 @@ fun setBgColor(view: AppCompatButton, slide: Slide) {
 }
 
 @BindingAdapter("slide")
-fun setAlphaMonitor(view: TextView, slide: Slide){
+fun setAlphaMonitor(view: TextView, slide: Slide) {
     view.text = UtilManager.getAlphaToMode(slide.alpha).toString()
 }
 
-@BindingAdapter("onDoubleClick", "activity", "slide")
-fun setOnDoubleClickListener(view: View, onDoubleClick: () -> Unit, onSlideDoubleClickListener: OnSlideDoubleClickListener, slide: Slide) {
-    if(slide is ImageSlide){
-        val gestureDetector = GestureDetector(view.context, object : GestureDetector.SimpleOnGestureListener() {
+@BindingAdapter("onDoubleClick", "activity", "slide", "viewModel")
+fun setOnDoubleClickListener(
+    view: View,
+    onDoubleClick: () -> Unit,
+    onSlideDoubleClickListener: OnSlideDoubleClickListener,
+    slide: Slide,
+    viewModel: MainViewModel
+) {
+    val gestureDetector =
+        GestureDetector(view.context, object : GestureDetector.SimpleOnGestureListener() {
             override fun onDoubleTap(e: MotionEvent): Boolean {
-                onDoubleClick.invoke()
-                onSlideDoubleClickListener.onSlideDoubleClicked(slide)
+                if (slide is ImageSlide) {
+                    onDoubleClick.invoke()
+                    onSlideDoubleClickListener.onSlideDoubleClicked(slide)
+                }
                 return true
+            }
+
+            override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+                viewModel.setNowSlideSelected(true)
+                return super.onSingleTapConfirmed(e)
             }
         })
 
-        view.setOnTouchListener { v, event ->
-            gestureDetector.onTouchEvent(event)
-            true
-        }
+    view.setOnTouchListener { _, event ->
+        gestureDetector.onTouchEvent(event)
+        true
     }
 }
+
+@BindingAdapter("syncSlide", "viewModel")
+fun syncItemChanged(recyclerView: RecyclerView, syncSlide: Slide, viewModel: MainViewModel) {
+    recyclerView.adapter?.let {
+        val adapter = it as SlideAdapter
+        adapter.notifyItemChanged(viewModel.slides.value?.indexOf(syncSlide)!!)
+    }
+}
+
+@BindingAdapter("app:layout_constraintBottom_toBottomOf")
+fun setBottomConstraint(view: ImageView, applyConstraint: Boolean) {
+    val layoutParams = view.layoutParams as? ConstraintLayout.LayoutParams
+    if (layoutParams != null) {
+        if (applyConstraint) {
+            layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.UNSET
+        } else {
+            layoutParams.bottomToBottom = view.context.resources.getIdentifier("main_view", "id", view.context.packageName)
+        }
+        view.layoutParams = layoutParams
+    }
+}
+
 

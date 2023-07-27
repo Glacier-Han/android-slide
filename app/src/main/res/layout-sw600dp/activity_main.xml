@@ -23,6 +23,10 @@
 
         <import type="com.glacier.androidslide.data.model.DrawingSlide" />
 
+        <import type="com.glacier.androidslide.data.model.SquareSlide" />
+
+        <import type="com.glacier.androidslide.data.model.ImageSlide" />
+
         <import type="com.glacier.androidslide.data.enums.Mode" />
     </data>
 
@@ -45,6 +49,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:setAdapter="@{viewModel.slides}"
+            app:syncSlide="@{slide}"
+            app:viewModel="@{viewModel}"
             tools:listitem="@layout/item_slide_square" />
 
         <TextView
@@ -70,6 +76,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:backgroundTint="#4CAF50"
+            android:onClick="@{() -> viewModel.setNowSlideSelected(false)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/vw_control"
             app:layout_constraintHorizontal_weight="0.6"
@@ -78,23 +85,22 @@
 
         <ImageView
             android:id="@+id/iv_slide"
+            viewModel="@{viewModel}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:background="@drawable/border_black"
             android:minWidth="300dp"
             android:minHeight="300dp"
-            android:onClick="@{() -> viewModel.onDoubleClick()}"
             android:padding="3dp"
-            app:layout_constraintBottom_toBottomOf="@id/main_view"
+            app:activity="@{activity}"
+            app:layout_constraintBottom_toBottomOf="@{slide instanceof ImageSlide}"
             app:layout_constraintEnd_toEndOf="@id/main_view"
             app:layout_constraintStart_toStartOf="@id/main_view"
             app:layout_constraintTop_toTopOf="@id/main_view"
             app:onDoubleClick="@{viewModel::onDoubleClick}"
-            app:activity="@{activity}"
-            app:slide="@{slide}"
-            app:setSlide="@{slide}" />
+            app:setSlide="@{slide}"
+            app:slide="@{slide}" />
 
         <com.glacier.androidslide.DrawingView
             android:id="@+id/dv_drawing"
@@ -144,6 +150,7 @@
             android:layout_marginTop="4dp"
             android:background="@drawable/bg_edittext"
             android:backgroundTint="#FFCA28"
+            android:enabled="@{slide instanceof SquareSlide ? true : false}"
             android:gravity="center"
             android:onClick="@{() -> viewModel.editColorRandom()}"
             android:padding="10dp"
