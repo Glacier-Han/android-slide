@@ -1,16 +1,14 @@
 package com.glacier.androidslide.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.glacier.androidslide.SlideManager
 import com.glacier.androidslide.model.Slide
-import com.glacier.androidslide.model.SquareSlide
 import com.glacier.androidslide.util.Mode
 import com.glacier.androidslide.util.SlideType
 import com.glacier.androidslide.util.UtilManager
 
-class SquareSlideViewModel : ViewModel() {
+class MainViewModel : ViewModel() {
     private val slideManager = SlideManager()
 
     var nowAlpha: Int = 10
@@ -23,8 +21,8 @@ class SquareSlideViewModel : ViewModel() {
     val slides = _slides
 
 
-    fun getNowSlide(): Slide? {
-        return slideManager.getSlideByIndex(nowSlideIndex)
+    fun getNowSlide() {
+        _nowSlide.value = slideManager.getSlideByIndex(nowSlideIndex)
     }
 
     fun getSlideWithIndex(index: Int): Slide? {
@@ -69,12 +67,12 @@ class SquareSlideViewModel : ViewModel() {
         }
 
         getNowSlide()
+        getSlides()
     }
 
     fun setNowSlideSelected(selected: Boolean) {
         slideManager.setNowSlideSelected(nowSlideIndex, selected)
         getNowSlide()
-
     }
 
     fun editColorRandom() {
@@ -84,6 +82,7 @@ class SquareSlideViewModel : ViewModel() {
             UtilManager.getRandomColor()[1],
             UtilManager.getRandomColor()[2]
         )
+        slides.postValue(slides.value)
         getNowSlide()
 
     }
@@ -100,6 +99,11 @@ class SquareSlideViewModel : ViewModel() {
         nowSlideIndex = slideManager.getSlideCount() - 1
         getNowSlide()
         getSlides()
+    }
 
+    fun editSlideImage(index: Int, image: ByteArray){
+        slideManager.editSlideImage(index, image)
+        getNowSlide()
+        getSlides()
     }
 }

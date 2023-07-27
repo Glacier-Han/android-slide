@@ -38,9 +38,9 @@ class SlideManager() {
     fun editSlideAlpha(index: Int, alpha: Int) {
         if (slideList.isNotEmpty()) {
             val slide = slideList[index]
-            if(slide is SquareSlide){
+            if (slide is SquareSlide) {
                 slideList[index] = slide.copy(alpha = alpha)
-            }else if(slide is ImageSlide){
+            } else if (slide is ImageSlide) {
                 slideList[index] = slide.copy(alpha = alpha)
             }
         }
@@ -49,11 +49,18 @@ class SlideManager() {
     fun setNowSlideSelected(index: Int, selected: Boolean) {
         if (slideList.isNotEmpty()) {
             val slide = slideList[index]
-            if(slide is SquareSlide){
+            if (slide is SquareSlide) {
                 slideList[index] = slide.copy(selected = selected)
-            }else if(slide is ImageSlide){
+            } else if (slide is ImageSlide) {
                 slideList[index] = slide.copy(selected = selected)
             }
+        }
+    }
+
+    fun editSlideImage(index: Int, image: ByteArray) {
+        if (slideList.isNotEmpty()) {
+            val slide = slideList[index] as ImageSlide
+            slideList[index] = slide.copy(image = image)
         }
     }
 }

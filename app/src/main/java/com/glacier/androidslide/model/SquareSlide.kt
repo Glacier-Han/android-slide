@@ -11,7 +11,7 @@ data class SquareSlide(
     val g: Int,
     val b: Int,
 
-) : Slide {
+    ) : Slide {
     override val slideType: SlideType = SlideType.SQUARE
     override fun toString(): String {
         return "$slideType - ($id), Side:$side, R:$r, G:$g, B:$b, Alpha:$alpha, Selected:$selected"

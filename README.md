@@ -33,3 +33,10 @@ Android 학습 프로젝트 #2
 > - ```SquareSlide``` 에는 RGB값을 필수속성으로 추가하였고, ```ImageSlide```에는 image 데이터가 들어갈 변수를 필수속성으로 추가하였다.
 > - ```SlideAdapter```에는 ViewType을 분기하여 해당하는 데이터 클래스에서 해당하는 뷰를 띄워주게 구현하였다.
 > - ```ItemTouchHelper.Callback()``` 을 사용하여 Drag&Drop으로 순서를 바꿀 수 있게 구현하였다.
+
+> ## 5. 사진 슬라이드 추가하기
+> 230721 PM 2:00
+> - 슬라이드 목록에서 특정 요소를 길게 터치하면 PopupMenu가 뜬다. 4개의 기능을 활용하여 슬라이드의 순서를 바꿀 수 있다.
+> - ```GestureDetector.SimpleOnGestureListener()``` 를 활용하여 더블클릭을 감지 한 후, 이미지 슬라이드일 경우 갤러리를 오픈한다.
+> - ```registerForActivityResult```를 활용하여 갤러리에서 선택한 사진을 받아온 후, ```getByteArrayFromUri```를 사용하여 ByteArray로 이미지 정보를 저장한다.
+> - 이미지 상단 정렬을 위해서 ConstraintSet에서 제약정보를 동적으로 변경하였다.
