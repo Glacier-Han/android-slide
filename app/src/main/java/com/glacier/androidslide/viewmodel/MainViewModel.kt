@@ -1,8 +1,14 @@
 package com.glacier.androidslide.viewmodel
 
+import android.media.browse.MediaBrowser.ItemCallback
 import android.util.Log
+import android.view.GestureDetector
+import android.view.MotionEvent
+import android.view.View
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.RecyclerView
 import com.glacier.androidslide.SlideManager
 import com.glacier.androidslide.adapter.SlideAdapter
 import com.glacier.androidslide.api.JsonSlideApi
@@ -13,14 +19,16 @@ import com.glacier.androidslide.data.model.ImageSlide
 import com.glacier.androidslide.data.model.JsonSlides
 import com.glacier.androidslide.data.model.Slide
 import com.glacier.androidslide.data.model.SquareSlide
+import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
+import com.glacier.androidslide.util.ItemMoveCallback
 import com.glacier.androidslide.util.UtilManager
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainViewModel : ViewModel() {
+class MainViewModel : ViewModel(){
     private val slideManager = SlideManager()
 
     var nowAlpha: Int = 10
@@ -32,18 +40,17 @@ class MainViewModel : ViewModel() {
     private val _slides = MutableLiveData<List<Slide>>()
     val slides = _slides
 
-    val adapter by lazy { SlideAdapter(_slides.value as MutableList<Slide>, ::onSlideSelected) }
+    private val _doubleClickEvent = MutableLiveData<Boolean>()
+    val doubleClickEvent = _doubleClickEvent
 
     fun getNowSlideData() {
         _nowSlide.value = slideManager.getSlideByIndex(nowSlideIndex)
     }
 
-    fun getSlideWithIndex(index: Int): Slide? {
-        _nowSlide.value = slideManager.getSlideByIndex(index)
+    fun getSlideWithIndex(index: Int){
         nowSlideIndex = index
-        nowAlpha = UtilManager.getAlphaToMode(_nowSlide.value?.alpha!!)
         getNowSlideData()
-        return _nowSlide.value
+        nowAlpha = UtilManager.getAlphaToMode(_nowSlide.value?.alpha!!)
     }
 
     fun getSlidesData(): List<Slide> {
@@ -81,7 +88,6 @@ class MainViewModel : ViewModel() {
         }
 
         getNowSlideData()
-        getSlidesData()
     }
 
     fun setNowSlideSelected(selected: Boolean) {
@@ -96,9 +102,11 @@ class MainViewModel : ViewModel() {
             UtilManager.getRandomColor()[1],
             UtilManager.getRandomColor()[2]
         )
-        slides.postValue(slides.value)
         getNowSlideData()
+    }
 
+    fun itemMoveCallback(rv: RecyclerView): ItemMoveCallback{
+        return ItemMoveCallback(rv.adapter as SlideAdapter)
     }
 
     fun setNewSlide() {
@@ -112,14 +120,13 @@ class MainViewModel : ViewModel() {
         )
 
         nowSlideIndex = slideManager.getSlideCount() - 1
-        getNowSlideData()
         getSlidesData()
+        getNowSlideData()
     }
 
     fun editSlideImage(index: Int, image: ByteArray) {
         slideManager.editSlideImage(index, image)
         getNowSlideData()
-        getSlidesData()
     }
 
     fun getJsonSlides(): Boolean {
@@ -178,9 +185,11 @@ class MainViewModel : ViewModel() {
         })
     }
 
-    private fun onSlideSelected(position: Int, slide: Slide) {
-        getSlideWithIndex(position)
+    fun onDoubleClick() {
+        _doubleClickEvent.value = true
+
     }
+
 
 
 }
