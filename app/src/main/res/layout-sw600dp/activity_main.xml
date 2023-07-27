@@ -4,15 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="activity"
             type="com.glacier.androidslide.MainActivity" />
+
         <variable
             name="viewModel"
             type="com.glacier.androidslide.viewmodel.MainViewModel" />
+
         <variable
             name="slide"
             type="com.glacier.androidslide.data.model.Slide" />
+
+        <variable
+            name="utilManager"
+            type="com.glacier.androidslide.util.UtilManager" />
+
+        <import type="com.glacier.androidslide.data.model.DrawingSlide" />
+
+        <import type="com.glacier.androidslide.data.enums.Mode" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,14 +36,15 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/grey"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
-            app:setAdapter="@{viewModel.adapter}"
+            app:activity="@{activity}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/btn_add_slide"
             app:layout_constraintEnd_toStartOf="@+id/main_view"
             app:layout_constraintHorizontal_weight="0.2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:setAdapter="@{viewModel.slides}"
             tools:listitem="@layout/item_slide_square" />
 
         <TextView
@@ -41,13 +53,13 @@
             android:layout_height="wrap_content"
             android:background="#B4E0F4"
             android:gravity="center"
+            android:onClick="@{() -> viewModel.setNewSlide()}"
+            android:onLongClick="@{() -> viewModel.getJsonSlides()}"
             android:padding="30dp"
             android:text="@string/text_btn_add_slide"
             android:textColor="#5C6BC0"
             android:textSize="25dp"
             android:textStyle="bold"
-            android:onLongClick="@{() -> viewModel.getJsonSlides()}"
-            android:onClick="@{() -> viewModel.setNewSlide()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/rv_slides"
             app:layout_constraintStart_toStartOf="@id/rv_slides"
@@ -69,30 +81,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_margin="10dp"
             android:background="@drawable/border_black"
             android:minWidth="300dp"
             android:minHeight="300dp"
+            android:onClick="@{() -> viewModel.onDoubleClick()}"
             android:padding="3dp"
-            android:layout_margin="10dp"
-            app:doubleClickListener="@{activity}"
-            app:slide="@{slide}"
-            app:setSlide="@{slide}"
             app:layout_constraintBottom_toBottomOf="@id/main_view"
             app:layout_constraintEnd_toEndOf="@id/main_view"
             app:layout_constraintStart_toStartOf="@id/main_view"
-            app:layout_constraintTop_toTopOf="@id/main_view" />
+            app:layout_constraintTop_toTopOf="@id/main_view"
+            app:onDoubleClick="@{viewModel::onDoubleClick}"
+            app:activity="@{activity}"
+            app:slide="@{slide}"
+            app:setSlide="@{slide}" />
 
         <com.glacier.androidslide.DrawingView
             android:id="@+id/dv_drawing"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="@{slide instanceof DrawingSlide ? android.view.View.VISIBLE : android.view.View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/vw_control"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintHorizontal_weight="0.6"
             app:layout_constraintStart_toEndOf="@+id/rv_slides"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            app:slide="@{slide}" />
 
         <View
             android:id="@+id/vw_control"
@@ -125,15 +141,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="4dp"
             android:background="@drawable/bg_edittext"
             android:backgroundTint="#FFCA28"
             android:gravity="center"
+            android:onClick="@{() -> viewModel.editColorRandom()}"
             android:padding="10dp"
             android:textAllCaps="false"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
+            app:bgColor="@{slide}"
             app:layout_constraintEnd_toEndOf="@id/vw_control"
             app:layout_constraintStart_toStartOf="@+id/vw_control"
             app:layout_constraintTop_toBottomOf="@id/tv_bgcolor" />
@@ -152,6 +170,7 @@
 
         <TextView
             android:id="@+id/tv_alpha_monitor"
+            slide="@{slide}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
@@ -161,7 +180,6 @@
             android:gravity="center"
             android:padding="10dp"
             android:textSize="19sp"
-            android:text="@{Integer.toString(viewModel.nowAlpha)}"
             app:layout_constraintEnd_toStartOf="@id/btn_alpha_minus"
             app:layout_constraintStart_toStartOf="@+id/vw_control"
             app:layout_constraintTop_toBottomOf="@id/tv_alpha" />
@@ -170,6 +188,7 @@
             android:id="@+id/btn_alpha_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="@{() -> viewModel.editAlpha(Mode.MINUS)}"
             android:src="@drawable/baseline_horizontal_rule_24"
             app:layout_constraintEnd_toStartOf="@id/btn_alpha_plus"
             app:layout_constraintStart_toEndOf="@id/tv_alpha_monitor"
@@ -180,6 +199,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
+            android:onClick="@{() -> viewModel.editAlpha(Mode.PLUS)}"
             android:src="@drawable/baseline_add_24"
             app:layout_constraintBottom_toBottomOf="@id/tv_alpha_monitor"
             app:layout_constraintEnd_toEndOf="@id/vw_control"

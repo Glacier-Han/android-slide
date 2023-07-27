@@ -41,12 +41,11 @@ import com.glacier.androidslide.viewmodel.MainViewModel
 import jp.wasabeef.glide.transformations.ColorFilterTransformation
 import java.io.IOException
 
-class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListener,
+class MainActivity : AppCompatActivity(), OnClickListener, OnSlideSelectedListener,
     OnSlideDoubleClickListener {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val slideViewModel: MainViewModel by viewModels()
-    private var observedListSize = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,11 +70,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
     fun init() {
         binding.ivSlide.setOnClickListener(this)
         binding.mainView.setOnClickListener(this)
-        binding.btnBgcolor.setOnClickListener(this)
-        binding.btnAlphaMinus.setOnClickListener(this)
-        binding.btnAlphaPlus.setOnClickListener(this)
-        binding.btnAddSlide.setOnClickListener(this)
-        binding.btnAddSlide.setOnLongClickListener(this)
 
     }
 
@@ -103,7 +97,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
                 binding.btnBgcolor.isEnabled = true
                 binding.ivSlide.visibility = VISIBLE
                 binding.dvDrawing.visibility = GONE
-                setBgColorBtnColor(slide.alpha, sColor.r, sColor.g, sColor.b)
             }
 
             is ImageSlide -> {
@@ -123,7 +116,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
                 binding.btnBgcolor.isEnabled = false
                 binding.ivSlide.visibility = VISIBLE
                 binding.dvDrawing.visibility = GONE
-                setBgColorBtnColor(slide.alpha, 200, 200, 200)
             }
 
             is DrawingSlide -> {
@@ -133,26 +125,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
                 binding.dvDrawing.setSlide(slide)
             }
         }
-    }
-
-    private fun setBgColorBtnColor(alpha: Int, R: Int, G: Int, B: Int) {
-        binding.btnBgcolor.backgroundTintList =
-            ColorStateList.valueOf(Color.argb(alpha, R, G, B))
-    }
-
-    private fun setRecyclerView(slides: List<Slide>) {
-//        val slideAdapter =
-//            SlideAdapter(slides as MutableList<Slide>, this@MainActivity)
-//
-//        with(binding.rvSlides) {
-//            adapter = slideAdapter
-//            layoutManager =
-//                LinearLayoutManager(baseContext)
-//
-//            val itemMoveCallback = ItemMoveCallback(slideAdapter)
-//            val itemTouchHelper = ItemTouchHelper(itemMoveCallback)
-//            itemTouchHelper.attachToRecyclerView(this)
-//        }
     }
 
     override fun onClick(view: View?) {
@@ -171,21 +143,6 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
                     AppCompatResources.getDrawable(baseContext, R.drawable.border_null)
             }
 
-            R.id.btn_bgcolor -> {
-                slideViewModel.editColorRandom()
-            }
-
-            R.id.btn_alpha_minus -> {
-                slideViewModel.editAlpha(Mode.MINUS)
-            }
-
-            R.id.btn_alpha_plus -> {
-                slideViewModel.editAlpha(Mode.PLUS)
-            }
-
-            R.id.btn_add_slide -> {
-                slideViewModel.setNewSlide() // 추후 랜덤으로 변경
-            }
         }
     }
 
@@ -238,18 +195,13 @@ class MainActivity : AppCompatActivity(), OnClickListener, View.OnLongClickListe
         val intent = Intent(Intent.ACTION_PICK).apply {
             type = "image/*"
             action = Intent.ACTION_GET_CONTENT
-//            setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
         }
         resultLauncher.launch(intent)
     }
 
-    override fun onLongClick(view: View?): Boolean {
-        when (view?.id) {
-            R.id.btn_add_slide -> {
-                slideViewModel.getJsonSlides()
-            }
-        }
-        return true
+    override fun onSlideSelected(position: Int, slide: Slide) {
+        slideViewModel.nowSlideIndex = position
+        slideViewModel.getSlideWithIndex(position)
     }
 
 }

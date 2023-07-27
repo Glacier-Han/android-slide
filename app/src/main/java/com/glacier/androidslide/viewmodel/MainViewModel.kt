@@ -1,14 +1,16 @@
 package com.glacier.androidslide.viewmodel
 
+
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.RecyclerView
 import com.glacier.androidslide.SlideManager
 import com.glacier.androidslide.model.Slide
 import com.glacier.androidslide.util.Mode
 import com.glacier.androidslide.util.SlideType
 import com.glacier.androidslide.util.UtilManager
 
-class MainViewModel : ViewModel() {
+class MainViewModel : ViewModel(){
     private val slideManager = SlideManager()
 
     var nowAlpha: Int = 10
@@ -20,18 +22,17 @@ class MainViewModel : ViewModel() {
     private val _slides = MutableLiveData<List<Slide>>()
     val slides = _slides
 
-    val adapter by lazy { SlideAdapter(_slides.value as MutableList<Slide>, ::onSlideSelected) }
+    private val _doubleClickEvent = MutableLiveData<Boolean>()
+    val doubleClickEvent = _doubleClickEvent
 
     fun getNowSlide(): Slide? {
         return slideManager.getSlideByIndex(nowSlideIndex)
     }
 
-    fun getSlideWithIndex(index: Int): Slide? {
-        _nowSlide.value = slideManager.getSlideByIndex(index)
+    fun getSlideWithIndex(index: Int){
         nowSlideIndex = index
-        nowAlpha = UtilManager.getAlphaToMode(_nowSlide.value?.alpha!!)
         getNowSlideData()
-        return _nowSlide.value
+        nowAlpha = UtilManager.getAlphaToMode(_nowSlide.value?.alpha!!)
     }
 
     fun getSlidesData(): List<Slide> {
@@ -69,7 +70,6 @@ class MainViewModel : ViewModel() {
         }
 
         getNowSlideData()
-        getSlidesData()
     }
 
     fun setNowSlideSelected(selected: Boolean) {
@@ -86,6 +86,8 @@ class MainViewModel : ViewModel() {
         )
         getNowSlide()
 
+    fun itemMoveCallback(rv: RecyclerView): ItemMoveCallback{
+        return ItemMoveCallback(rv.adapter as SlideAdapter)
     }
 
     fun setNewSlide() {
@@ -98,14 +100,13 @@ class MainViewModel : ViewModel() {
         )
 
         nowSlideIndex = slideManager.getSlideCount() - 1
-        getNowSlideData()
         getSlidesData()
+        getNowSlideData()
     }
 
     fun editSlideImage(index: Int, image: ByteArray){
         slideManager.editSlideImage(index, image)
         getNowSlideData()
-        getSlidesData()
     }
 
 }

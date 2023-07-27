@@ -28,7 +28,7 @@ import com.glacier.androidslide.listener.OnSlideSelectedListener
 
 class SlideAdapter(
     private val slides: MutableList<Slide>,
-    private val onSlideSelected: (Int, Slide) -> Unit,
+    private val listener: OnSlideSelectedListener,
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemMoveListener {
 
@@ -178,7 +178,7 @@ class SlideAdapter(
             )
 
             itemView.setOnClickListener {
-                onSlideSelected(adapterPosition, squareSlide)
+                listener.onSlideSelected(adapterPosition, squareSlide)
             }
         }
     }
@@ -191,7 +191,7 @@ class SlideAdapter(
                 .error(R.drawable.outline_image_24).override(50, 50).into(binding.ivSlide)
 
             itemView.setOnClickListener {
-                onSlideSelected(adapterPosition, imageSlide)
+                listener.onSlideSelected(adapterPosition, imageSlide)
             }
 
             itemView.setOnTouchListener(object : View.OnTouchListener {
@@ -217,7 +217,7 @@ class SlideAdapter(
         fun bind(drawingSlide: DrawingSlide) {
             binding.slideIndex = adapterPosition + 1
             itemView.setOnClickListener {
-                onSlideSelected(adapterPosition, drawingSlide)
+                listener.onSlideSelected(adapterPosition, drawingSlide)
             }
         }
     }
