@@ -35,27 +35,10 @@ class SlideAdapter(
         private const val VIEW_TYPE_DRAWING = 2
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return when (viewType) {
-            VIEW_TYPE_SQUARE -> {
-                SquareSlideViewHolder(ItemSlideSquareBinding.inflate(inflater, parent, false))
-            }
-
-            VIEW_TYPE_IMAGE -> {
-                ImageSlideViewHolder(ItemSlideImageBinding.inflate(inflater, parent, false))
-            }
-
-            else -> throw IllegalArgumentException("Invalid ViewType")
-        }
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val slide = slides[position]
-
-        holder.itemView.setOnLongClickListener {
-            val context = holder.itemView.context
-            PopupMenu(context, holder.itemView).apply {
+    private fun showPopUpMenu(viewHolder: ViewHolder, position: Int) {
+        val context = viewHolder.itemView.context
+        if (popupMenu == null) {
+            popupMenu = PopupMenu(context, viewHolder.itemView).apply {
                 menuInflater.inflate(R.menu.slide_item_menu, menu)
             }
         } else {
@@ -223,27 +206,13 @@ class SlideAdapter(
     inner class ImageSlideViewHolder(private val binding: ItemSlideImageBinding) :
         ViewHolder(binding.root) {
         fun bind(imageSlide: ImageSlide) {
-            // todo: 이미지 슬라이드 처리하기
-            Glide.with(binding.root.context).load(imageSlide.image)
-                .error(R.drawable.outline_image_24).override(50, 50).into(binding.ivSlide)
+            binding.slideIndex = adapterPosition + 1
+            binding.slide = imageSlide
 
             itemView.setOnClickListener {
                 listener.onSlideSelected(adapterPosition, imageSlide)
             }
 
-            itemView.setOnTouchListener(object : View.OnTouchListener {
-                private val gestureDetector =
-                    GestureDetector(
-                        itemView.context,
-                        object : GestureDetector.SimpleOnGestureListener() {
-                            override fun onDoubleTap(e: MotionEvent): Boolean {
-                                doubleClickListener.onSlideDoubleClicked(
-                                    adapterPosition,
-                                    slides[adapterPosition]
-                                )
-                                return true
-                            }
-                        })
 
         }
     }

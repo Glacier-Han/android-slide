@@ -4,10 +4,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.glacier.androidslide.SlideManager
-import com.glacier.androidslide.model.Slide
-import com.glacier.androidslide.util.Mode
-import com.glacier.androidslide.util.SlideType
+import com.glacier.androidslide.adapter.SlideAdapter
+import com.glacier.androidslide.api.JsonSlideApi
+import com.glacier.androidslide.api.RetrofitInstance
+import com.glacier.androidslide.data.enums.Mode
+import com.glacier.androidslide.data.enums.SlideType
+import com.glacier.androidslide.data.model.ImageSlide
+import com.glacier.androidslide.data.model.JsonSlides
+import com.glacier.androidslide.data.model.Slide
+import com.glacier.androidslide.data.model.SquareSlide
+import com.glacier.androidslide.util.ItemMoveCallback
 import com.glacier.androidslide.util.UtilManager
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainViewModel : ViewModel(){
     private val slideManager = SlideManager()
@@ -24,8 +35,8 @@ class MainViewModel : ViewModel(){
     private val _doubleClickEvent = MutableLiveData<Boolean>()
     val doubleClickEvent = _doubleClickEvent
 
-    fun getNowSlide(): Slide? {
-        return slideManager.getSlideByIndex(nowSlideIndex)
+    fun getNowSlideData() {
+        _nowSlide.value = slideManager.getSlideByIndex(nowSlideIndex)
     }
 
     fun getSlideWithIndex(index: Int){
@@ -83,7 +94,8 @@ class MainViewModel : ViewModel(){
             UtilManager.getRandomColor()[1],
             UtilManager.getRandomColor()[2]
         )
-        getNowSlide()
+        getNowSlideData()
+    }
 
     fun itemMoveCallback(rv: RecyclerView): ItemMoveCallback{
         return ItemMoveCallback(rv.adapter as SlideAdapter)
@@ -95,7 +107,8 @@ class MainViewModel : ViewModel(){
             UtilManager.getRandomColor()[1],
             UtilManager.getRandomColor()[2],
             255,
-            slideType
+            ByteArray(0),
+            SlideType.values().random()
         )
 
         nowSlideIndex = slideManager.getSlideCount() - 1
@@ -103,9 +116,72 @@ class MainViewModel : ViewModel(){
         getNowSlideData()
     }
 
-    fun editSlideImage(index: Int, image: ByteArray){
+    fun editSlideImage(index: Int, image: ByteArray) {
         slideManager.editSlideImage(index, image)
         getNowSlideData()
     }
+
+    fun getJsonSlides(): Boolean {
+        val api = RetrofitInstance.getInstance().create(JsonSlideApi::class.java)
+        val apiMode = listOf(api.getSquareSlides(), api.getImageSlides())
+        apiMode.random().enqueue(object : Callback<JsonSlides> {
+            override fun onResponse(call: Call<JsonSlides>, response: Response<JsonSlides>) {
+                response.body()?.slides?.let { slides ->
+                    for (slide in slides) {
+                        when (slide) {
+                            is ImageSlide -> {
+                                loadImageUrlToByteArray(slide.url)
+                            }
+
+                            is SquareSlide -> {
+                                slideManager.createSlide(
+                                    slide.color.r,
+                                    slide.color.g,
+                                    slide.color.b,
+                                    255,
+                                    ByteArray(0),
+                                    SlideType.SQUARE
+                                )
+                            }
+
+                            else -> {}
+                        }
+                    }
+
+                    getNowSlideData()
+                    getSlidesData()
+                }
+
+            }
+
+            override fun onFailure(call: Call<JsonSlides>, t: Throwable) {
+            }
+        })
+        return true
+    }
+
+    fun loadImageUrlToByteArray(imageUrl: String) {
+        val api = RetrofitInstance.getInstance().create(JsonSlideApi::class.java)
+        api.getImageByteArray(imageUrl).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.isSuccessful) {
+                    response.body()?.bytes()?.let { image ->
+                        slideManager.createSlide(0, 0, 0, 255, image, SlideType.IMAGE)
+                        getNowSlideData()
+                        getSlidesData()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+            }
+        })
+    }
+
+    fun onDoubleClick() {
+        _doubleClickEvent.value = true
+    }
+
+
 
 }
