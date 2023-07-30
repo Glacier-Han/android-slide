@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken
 class SlideSaveManager(private val context: Context) {
 
     private val PREF_NAME = "SlideSavePreferences"
-    private val KEY_SLIDE_SAVE = "slide_save"
+    private val KEY_SLIDE_SAVE = "slidesave"
 
     val gson = GsonBuilder()
         .registerTypeAdapter(Slide::class.java, JsonSlideDeserializer())
@@ -18,15 +18,15 @@ class SlideSaveManager(private val context: Context) {
 
     fun saveSlideList(slideList: List<Slide>) {
         val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences("SlidePreferences", Context.MODE_PRIVATE)
+        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         val jsonSlideList = gson.toJson(slideList)
-        sharedPreferences.edit().putString("SlideList", jsonSlideList).apply()
+        sharedPreferences.edit().putString(KEY_SLIDE_SAVE, jsonSlideList).apply()
     }
 
     fun getSlideList(): List<Slide> {
         val sharedPreferences: SharedPreferences =
-            context.getSharedPreferences("SlidePreferences", Context.MODE_PRIVATE)
-        val jsonSlideList = sharedPreferences.getString("SlideList", null)
+            context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val jsonSlideList = sharedPreferences.getString(KEY_SLIDE_SAVE, null)
         return if (jsonSlideList != null) {
             val type = object : TypeToken<List<Slide>>() {}.type
             gson.fromJson(jsonSlideList, type)

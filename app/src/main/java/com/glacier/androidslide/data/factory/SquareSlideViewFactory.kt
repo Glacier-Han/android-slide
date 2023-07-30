@@ -19,7 +19,7 @@ object SquareSlideViewFactory : SquareSlideFactory {
         return when(slideType){
             SlideType.SQUARE -> SquareSlide(id, side, alpha, true, SlideColor(r, g, b))
             SlideType.IMAGE -> ImageSlide(id, side, alpha, true, image, "")
-            SlideType.DRAWING -> DrawingSlide(id, side, alpha, true, Path(),true, Paint(),0f,0f,0f,0f)
+            SlideType.DRAWING -> DrawingSlide(id, side, alpha, true, mutableListOf(),true, Paint(),0f,0f,0f,0f)
         }
     }
 }

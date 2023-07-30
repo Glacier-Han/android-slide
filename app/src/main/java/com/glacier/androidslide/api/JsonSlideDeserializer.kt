@@ -4,6 +4,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import com.glacier.androidslide.data.model.DrawingSlide
 import com.glacier.androidslide.data.model.ImageSlide
+import com.glacier.androidslide.data.model.Point
 import com.glacier.androidslide.data.model.Slide
 import com.glacier.androidslide.data.model.SlideColor
 import com.glacier.androidslide.data.model.SquareSlide
@@ -43,7 +44,7 @@ class JsonSlideDeserializer : JsonDeserializer<Slide> {
                 0,
                 0,
                 false,
-                Path(),
+                mutableListOf(),
                 true,
                 Paint(),
                 0f,0f,0f,0f
