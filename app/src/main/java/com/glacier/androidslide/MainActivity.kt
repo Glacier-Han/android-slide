@@ -1,6 +1,5 @@
 package com.glacier.androidslide
 
-import android.view.View.VISIBLE
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -21,6 +20,7 @@ import com.glacier.androidslide.databinding.ActivityMainBinding
 import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
 import com.glacier.androidslide.viewmodel.MainViewModel
+import jp.wasabeef.glide.transformations.ColorFilterTransformation
 import java.io.IOException
 
 class MainActivity : AppCompatActivity(), OnSlideSelectedListener,

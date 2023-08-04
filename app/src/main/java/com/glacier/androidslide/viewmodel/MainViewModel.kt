@@ -1,5 +1,6 @@
 package com.glacier.androidslide.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
@@ -181,7 +182,4 @@ class MainViewModel : ViewModel(){
     fun onDoubleClick() {
         _doubleClickEvent.value = true
     }
-
-
-
 }

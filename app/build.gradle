@@ -47,7 +47,11 @@ dependencies {
 
     implementation  'androidx.activity:activity-ktx:1.7.2'
     implementation 'com.github.bumptech.glide:glide:4.13.2'
+<<<<<<< HEAD
     kapt 'com.github.bumptech.glide:compiler:4.13.2'
+=======
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.2'
+>>>>>>> 349897cad3c73b21e33a70ca9d80670f8ce683a8
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

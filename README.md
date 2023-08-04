@@ -51,6 +51,7 @@ Android 학습 프로젝트 #2
 > - 기존에는 observe중인 데이터가 바뀌면 ```adapter``` 자체를 새로 갱신했는데, 리사이클러뷰에서 ```notifyItemInserted``` 메소드를 실행하는 것으로 변경하니 버벅거림이 개선되었다.
 
 https://github.com/softeerbootcamp-2nd/android-slide/assets/61905052/58317a43-0664-4eed-a81f-d00cc0ac3877
+<<<<<<< HEAD
 
 > ## 7. 드로잉 표시하기
 > 230727 PM 5:00
@@ -60,3 +61,5 @@ https://github.com/softeerbootcamp-2nd/android-slide/assets/61905052/58317a43-06
 > - DataBinding으로 마이그레이션 완료
 > - xml에서 처리하기 곤란한 부분은 ```BindingAdapter``` 활용하여 처리하기
 
+=======
+>>>>>>> 349897cad3c73b21e33a70ca9d80670f8ce683a8
