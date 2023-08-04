@@ -1,10 +1,14 @@
 package com.glacier.androidslide.api
 
+<<<<<<< HEAD
 import android.graphics.Paint
 import android.graphics.Path
 import com.glacier.androidslide.data.model.DrawingSlide
 import com.glacier.androidslide.data.model.ImageSlide
 import com.glacier.androidslide.data.model.Point
+=======
+import com.glacier.androidslide.data.model.ImageSlide
+>>>>>>> 39563cc89fb526ba1d896a39a4342e94737f800b
 import com.glacier.androidslide.data.model.Slide
 import com.glacier.androidslide.data.model.SlideColor
 import com.glacier.androidslide.data.model.SquareSlide

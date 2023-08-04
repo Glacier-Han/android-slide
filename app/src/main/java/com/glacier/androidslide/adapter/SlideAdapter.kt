@@ -213,7 +213,6 @@ class SlideAdapter(
                 listener.onSlideSelected(adapterPosition, imageSlide)
             }
 
-
         }
     }
 

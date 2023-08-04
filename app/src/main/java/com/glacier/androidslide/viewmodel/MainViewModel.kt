@@ -213,5 +213,4 @@ class MainViewModel : ViewModel(){
     companion object {
         private const val KEY_SLIDE_STATE = "KEY_SLIDE_STATE"
     }
-
 }

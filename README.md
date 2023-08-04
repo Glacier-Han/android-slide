@@ -65,4 +65,3 @@ https://github.com/softeerbootcamp-2nd/android-slide/assets/61905052/58317a43-06
 > - ```SavedStateHandle``` 를 사용하여 ```ViewModel```의 상태를 저장하기, ```Configuration 변경```에 대응
 > - ```SharedPreference```를 활용하여 슬라이드 상태 저장하기. 앱 재실행시에 불러와서 상태 유지하기
 > - ```Path()```는 직렬화되지 않기떄문에 ```Point(x: Float, y: Float)``` 객체를 만들어서 관리하기
-
