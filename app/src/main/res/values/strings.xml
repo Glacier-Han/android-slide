@@ -7,4 +7,13 @@
     <string name="menu_toast_hard_front">슬라이드를 맨 앞으로 보냅니다.</string>
     <string name="menu_toast_front">슬라이드를 앞으로 보냅니다.</string>
 
+    <string name="menu_hard_back">맨 뒤로 보내기</string>
+    <string name="menu_back">뒤로 보내기</string>
+    <string name="menu_hard_front">맨 앞으로 보내기</string>
+    <string name="menu_front">앞으로 보내기</string>
+
+    <string name="text_image">IMAGE</string>
+    <string name="text_drawing">DRAWING</string>
+    <string name="error_msg_imageload">ERROR: 사진을 불러오는데 실패하였습니다!</string>
+
 </resources>

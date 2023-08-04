@@ -3,62 +3,47 @@ package com.glacier.androidslide.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
-import android.view.GestureDetector
 import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.glacier.androidslide.R
+import com.glacier.androidslide.data.enums.SlideType
+import com.glacier.androidslide.data.model.DrawingSlide
+import com.glacier.androidslide.data.model.ImageSlide
+import com.glacier.androidslide.data.model.Slide
+import com.glacier.androidslide.data.model.SquareSlide
+import com.glacier.androidslide.databinding.ItemSlideDrawingBinding
 import com.glacier.androidslide.databinding.ItemSlideImageBinding
 import com.glacier.androidslide.databinding.ItemSlideSquareBinding
 import com.glacier.androidslide.listener.ItemMoveListener
-import com.glacier.androidslide.listener.OnSlideDoubleClickListener
 import com.glacier.androidslide.listener.OnSlideSelectedListener
-import com.glacier.androidslide.model.ImageSlide
-import com.glacier.androidslide.model.Slide
-import com.glacier.androidslide.model.SquareSlide
-import com.glacier.androidslide.util.SlideType
 
 class SlideAdapter(
     private val slides: MutableList<Slide>,
     private val listener: OnSlideSelectedListener,
-    private val doubleClickListener: OnSlideDoubleClickListener
 ) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemMoveListener {
+    RecyclerView.Adapter<ViewHolder>(), ItemMoveListener {
+    private var popupMenu: PopupMenu? = null
 
     companion object {
         private const val VIEW_TYPE_SQUARE = 0
         private const val VIEW_TYPE_IMAGE = 1
+        private const val VIEW_TYPE_DRAWING = 2
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        return when (viewType) {
-            VIEW_TYPE_SQUARE -> {
-                SquareSlideViewHolder(ItemSlideSquareBinding.inflate(inflater, parent, false))
-            }
-
-            VIEW_TYPE_IMAGE -> {
-                ImageSlideViewHolder(ItemSlideImageBinding.inflate(inflater, parent, false))
-            }
-
-            else -> throw IllegalArgumentException("Invalid ViewType")
-        }
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val slide = slides[position]
-
-        holder.itemView.setOnLongClickListener {
-            val context = holder.itemView.context
-            PopupMenu(context, holder.itemView).apply {
+    private fun showPopUpMenu(viewHolder: ViewHolder, position: Int) {
+        val context = viewHolder.itemView.context
+        if (popupMenu == null) {
+            popupMenu = PopupMenu(context, viewHolder.itemView).apply {
                 menuInflater.inflate(R.menu.slide_item_menu, menu)
-                setOnMenuItemClickListener { item ->
+            }
+        } else {
+            popupMenu?.let {
+                it.setOnMenuItemClickListener { item ->
                     when (item.itemId) {
                         R.id.menu_hard_back -> {
                             showToast(
@@ -117,22 +102,61 @@ class SlideAdapter(
                         else -> false
                     }
                 }
-                show()
             }
+            popupMenu?.show()
+        }
+    }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return when (viewType) {
+            VIEW_TYPE_SQUARE -> SquareSlideViewHolder(
+                DataBindingUtil.inflate(
+                    LayoutInflater.from(
+                        parent.context
+                    ), R.layout.item_slide_square, parent, false
+                )
+            )
+
+            VIEW_TYPE_IMAGE -> ImageSlideViewHolder(
+                DataBindingUtil.inflate(
+                    LayoutInflater.from(
+                        parent.context
+                    ), R.layout.item_slide_image, parent, false
+                )
+            )
+
+            VIEW_TYPE_DRAWING -> DrawingSlideViewHolder(
+                DataBindingUtil.inflate(
+                    LayoutInflater.from(
+                        parent.context
+                    ), R.layout.item_slide_drawing, parent, false
+                )
+            )
+
+            else -> throw IllegalArgumentException("Invalid ViewType")
+        }
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val slide = slides[position]
+
+        holder.itemView.setOnLongClickListener {
+            showPopUpMenu(holder, position)
             return@setOnLongClickListener true
         }
 
 
         when (holder) {
             is SquareSlideViewHolder -> {
-                val squareSlide = slide as SquareSlide
-                holder.bind(squareSlide)
+                holder.bind(slide as SquareSlide)
             }
 
             is ImageSlideViewHolder -> {
-                val imageSlide = slide as ImageSlide
-                holder.bind(imageSlide)
+                holder.bind(slide as ImageSlide)
+            }
+
+            is DrawingSlideViewHolder -> {
+                holder.bind(slide as DrawingSlide)
             }
         }
     }
@@ -146,6 +170,7 @@ class SlideAdapter(
         return when (slide.type) {
             SlideType.SQUARE -> VIEW_TYPE_SQUARE
             SlideType.IMAGE -> VIEW_TYPE_IMAGE
+            SlideType.DRAWING -> VIEW_TYPE_DRAWING
         }
     }
 
@@ -155,7 +180,6 @@ class SlideAdapter(
         slides.removeAt(fromPosition)
         slides.add(toPosition, slide)
 
-        Log.d("DTEST", "TEST")
         notifyItemMoved(fromPosition, toPosition)
         notifyItemChanged(fromPosition)
         notifyItemChanged(toPosition)
@@ -163,51 +187,42 @@ class SlideAdapter(
     }
 
     inner class SquareSlideViewHolder(private val binding: ItemSlideSquareBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        ViewHolder(binding.root) {
         fun bind(squareSlide: SquareSlide) {
-            // todo: 정사각형 슬라이드 처리하기
+            binding.slideIndex = adapterPosition + 1
+            binding.colorTint = Color.argb(
+                squareSlide.alpha,
+                squareSlide.color.r,
+                squareSlide.color.g,
+                squareSlide.color.b
+            )
 
             itemView.setOnClickListener {
                 listener.onSlideSelected(adapterPosition, squareSlide)
             }
-
-            binding.tvSlideNumber.text = "${adapterPosition + 1}"
-            binding.ivSlide.setColorFilter(
-                Color.argb(
-                    squareSlide.alpha,
-                    squareSlide.color.r,
-                    squareSlide.color.g,
-                    squareSlide.color.b
-                )
-            )
         }
     }
 
     inner class ImageSlideViewHolder(private val binding: ItemSlideImageBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        ViewHolder(binding.root) {
         fun bind(imageSlide: ImageSlide) {
-            // todo: 이미지 슬라이드 처리하기
-            Glide.with(binding.root.context).load(imageSlide.image).error(R.drawable.outline_image_24).override(50,50).into(binding.ivSlide)
+            binding.slideIndex = adapterPosition + 1
+            binding.slide = imageSlide
 
             itemView.setOnClickListener {
                 listener.onSlideSelected(adapterPosition, imageSlide)
             }
 
-            itemView.setOnTouchListener(object : View.OnTouchListener {
-                private val gestureDetector =
-                    GestureDetector(itemView.context, object : GestureDetector.SimpleOnGestureListener() {
-                        override fun onDoubleTap(e: MotionEvent): Boolean {
-                            doubleClickListener.onSlideDoubleClicked(adapterPosition, slides[adapterPosition])
-                            return true
-                        }
-                    })
+        }
+    }
 
-                override fun onTouch(v: View?, event: MotionEvent): Boolean {
-                    return gestureDetector.onTouchEvent(event)
-                }
-            })
-
-            binding.tvSlideNumber.text = "${adapterPosition + 1}"
+    inner class DrawingSlideViewHolder(private val binding: ItemSlideDrawingBinding) :
+        ViewHolder(binding.root) {
+        fun bind(drawingSlide: DrawingSlide) {
+            binding.slideIndex = adapterPosition + 1
+            itemView.setOnClickListener {
+                listener.onSlideSelected(adapterPosition, drawingSlide)
+            }
         }
     }
 

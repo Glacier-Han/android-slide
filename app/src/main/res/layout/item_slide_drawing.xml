@@ -10,7 +10,7 @@
 
         <variable
             name="slide"
-            type="com.glacier.androidslide.data.model.ImageSlide" />
+            type="com.glacier.androidslide.data.model.DrawingSlide" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -58,8 +58,7 @@
             android:minWidth="50dp"
             android:minHeight="50dp"
             android:padding="3dp"
-            setImage="@{slide.image}"
-            android:src="@drawable/outline_image_24"
+            android:src="@drawable/baseline_draw_24"
             app:layout_constraintBottom_toBottomOf="@id/main_view"
             app:layout_constraintEnd_toEndOf="@id/main_view"
             app:layout_constraintStart_toStartOf="@id/main_view"

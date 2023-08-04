@@ -1,4 +1,4 @@
-package com.glacier.androidslide.model
+package com.glacier.androidslide.data.model
 
 data class JsonSlides(
     val title: String,

@@ -1,6 +1,6 @@
 package com.glacier.androidslide.api
 
-import com.glacier.androidslide.model.JsonSlides
+import com.glacier.androidslide.data.model.JsonSlides
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET

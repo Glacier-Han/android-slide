@@ -1,156 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/root_view"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_slides"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/grey"
-        app:layout_constraintBottom_toTopOf="@id/btn_add_slide"
-        app:layout_constraintEnd_toStartOf="@+id/main_view"
-        app:layout_constraintHorizontal_weight="0.2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_slide_square" />
+    <data>
 
-    <TextView
-        android:id="@+id/btn_add_slide"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="#B4E0F4"
-        android:gravity="center"
-        android:padding="30dp"
-        android:text="@string/text_btn_add_slide"
-        android:textColor="#5C6BC0"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/rv_slides"
-        app:layout_constraintStart_toStartOf="@id/rv_slides"
-        app:layout_constraintTop_toBottomOf="@id/rv_slides" />
+        <variable
+            name="activity"
+            type="com.glacier.androidslide.MainActivity" />
 
-    <View
-        android:id="@+id/main_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:backgroundTint="#4CAF50"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/vw_control"
-        app:layout_constraintHorizontal_weight="0.6"
-        app:layout_constraintStart_toEndOf="@+id/rv_slides"
-        app:layout_constraintTop_toTopOf="parent" />
+        <variable
+            name="viewModel"
+            type="com.glacier.androidslide.viewmodel.MainViewModel" />
 
-    <ImageView
-        android:id="@+id/iv_slide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/border_black"
-        android:minWidth="300dp"
-        android:minHeight="300dp"
-        android:padding="3dp"
-        android:layout_margin="10dp"
-        app:layout_constraintBottom_toBottomOf="@id/main_view"
-        app:layout_constraintEnd_toEndOf="@id/main_view"
-        app:layout_constraintStart_toStartOf="@id/main_view"
-        app:layout_constraintTop_toTopOf="@id/main_view" />
+        <variable
+            name="slide"
+            type="com.glacier.androidslide.data.model.Slide" />
 
-    <View
-        android:id="@+id/vw_control"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/grey"
-        android:orientation="vertical"
-        android:padding="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="0.2"
-        app:layout_constraintStart_toEndOf="@+id/main_view"
-        app:layout_constraintTop_toTopOf="parent" />
+        <variable
+            name="utilManager"
+            type="com.glacier.androidslide.util.UtilManager" />
 
+        <import type="com.glacier.androidslide.data.model.DrawingSlide" />
 
-    <TextView
-        android:id="@+id/tv_bgcolor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="10dp"
-        android:text="배경색"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/vw_control"
-        app:layout_constraintTop_toTopOf="parent" />
+        <import type="com.glacier.androidslide.data.model.SquareSlide" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_bgcolor"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/bg_edittext"
-        android:backgroundTint="#FFCA28"
-        android:gravity="center"
-        android:padding="10dp"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@id/vw_control"
-        app:layout_constraintStart_toStartOf="@+id/vw_control"
-        app:layout_constraintTop_toBottomOf="@id/tv_bgcolor" />
+        <import type="com.glacier.androidslide.data.model.ImageSlide" />
 
-    <TextView
-        android:id="@+id/tv_alpha"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="20dp"
-        android:text="투명도"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/vw_control"
-        app:layout_constraintTop_toBottomOf="@id/btn_bgcolor" />
+        <import type="com.glacier.androidslide.data.enums.Mode" />
+    </data>
 
-    <TextView
-        android:id="@+id/tv_alpha_monitor"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/bg_edittext"
-        android:backgroundTint="@color/white"
-        android:gravity="center"
-        android:padding="10dp"
-        android:textSize="19sp"
-        app:layout_constraintEnd_toStartOf="@id/btn_alpha_minus"
-        app:layout_constraintStart_toStartOf="@+id/vw_control"
-        app:layout_constraintTop_toBottomOf="@id/tv_alpha" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/btn_alpha_minus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/baseline_horizontal_rule_24"
-        app:layout_constraintEnd_toStartOf="@id/btn_alpha_plus"
-        app:layout_constraintStart_toEndOf="@id/tv_alpha_monitor"
-        app:layout_constraintTop_toTopOf="@id/tv_alpha_monitor" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_slides"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/grey"
+            android:orientation="vertical"
+            app:activity="@{activity}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/btn_add_slide"
+            app:layout_constraintEnd_toStartOf="@+id/main_view"
+            app:layout_constraintHorizontal_weight="0.2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setAdapter="@{viewModel.slides}"
+            app:syncSlide="@{slide}"
+            app:viewModel="@{viewModel}"
+            tools:listitem="@layout/item_slide_square" />
 
-    <ImageButton
-        android:id="@+id/btn_alpha_plus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:src="@drawable/baseline_add_24"
-        app:layout_constraintBottom_toBottomOf="@id/tv_alpha_monitor"
-        app:layout_constraintEnd_toEndOf="@id/vw_control"
-        app:layout_constraintStart_toEndOf="@id/btn_alpha_minus"
-        app:layout_constraintTop_toTopOf="@id/tv_alpha_monitor" />
+        <TextView
+            android:id="@+id/btn_add_slide"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#B4E0F4"
+            android:gravity="center"
+            android:onClick="@{() -> viewModel.setNewSlide()}"
+            android:onLongClick="@{() -> viewModel.getJsonSlides()}"
+            android:padding="30dp"
+            android:text="@string/text_btn_add_slide"
+            android:textColor="#5C6BC0"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/rv_slides"
+            app:layout_constraintStart_toStartOf="@id/rv_slides"
+            app:layout_constraintTop_toBottomOf="@id/rv_slides" />
+
+        <View
+            android:id="@+id/main_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:backgroundTint="#4CAF50"
+            android:onClick="@{() -> viewModel.setNowSlideSelected(false)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/vw_control"
+            app:layout_constraintHorizontal_weight="0.6"
+            app:layout_constraintStart_toEndOf="@+id/rv_slides"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_slide"
+            viewModel="@{viewModel}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:minWidth="300dp"
+            android:minHeight="300dp"
+            android:padding="3dp"
+            app:activity="@{activity}"
+            app:layout_constraintBottom_toBottomOf="@{slide instanceof ImageSlide}"
+            app:layout_constraintEnd_toEndOf="@id/main_view"
+            app:layout_constraintStart_toStartOf="@id/main_view"
+            app:layout_constraintTop_toTopOf="@id/main_view"
+            app:onDoubleClick="@{viewModel::onDoubleClick}"
+            app:setSlide="@{slide}"
+            app:slide="@{slide}" />
+
+        <com.glacier.androidslide.DrawingView
+            android:id="@+id/dv_drawing"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="@{slide instanceof DrawingSlide ? android.view.View.VISIBLE : android.view.View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/vw_control"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_weight="0.6"
+            app:layout_constraintStart_toEndOf="@+id/rv_slides"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:slide="@{slide}" />
+
+        <View
+            android:id="@+id/vw_control"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/grey"
+            android:orientation="vertical"
+            android:padding="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="0.2"
+            app:layout_constraintStart_toEndOf="@+id/main_view"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_bgcolor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:text="배경색"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/vw_control"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_bgcolor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_edittext"
+            android:backgroundTint="#FFCA28"
+            android:enabled="@{slide instanceof SquareSlide ? true : false}"
+            android:gravity="center"
+            android:onClick="@{() -> viewModel.editColorRandom()}"
+            android:padding="10dp"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:bgColor="@{slide}"
+            app:layout_constraintEnd_toEndOf="@id/vw_control"
+            app:layout_constraintStart_toStartOf="@+id/vw_control"
+            app:layout_constraintTop_toBottomOf="@id/tv_bgcolor" />
+
+        <TextView
+            android:id="@+id/tv_alpha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="20dp"
+            android:text="투명도"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="@+id/vw_control"
+            app:layout_constraintTop_toBottomOf="@id/btn_bgcolor" />
+
+        <TextView
+            android:id="@+id/tv_alpha_monitor"
+            slide="@{slide}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_edittext"
+            android:backgroundTint="@color/white"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="19sp"
+            app:layout_constraintEnd_toStartOf="@id/btn_alpha_minus"
+            app:layout_constraintStart_toStartOf="@+id/vw_control"
+            app:layout_constraintTop_toBottomOf="@id/tv_alpha" />
+
+        <ImageButton
+            android:id="@+id/btn_alpha_minus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> viewModel.editAlpha(Mode.MINUS)}"
+            android:src="@drawable/baseline_horizontal_rule_24"
+            app:layout_constraintEnd_toStartOf="@id/btn_alpha_plus"
+            app:layout_constraintStart_toEndOf="@id/tv_alpha_monitor"
+            app:layout_constraintTop_toTopOf="@id/tv_alpha_monitor" />
+
+        <ImageButton
+            android:id="@+id/btn_alpha_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:onClick="@{() -> viewModel.editAlpha(Mode.PLUS)}"
+            android:src="@drawable/baseline_add_24"
+            app:layout_constraintBottom_toBottomOf="@id/tv_alpha_monitor"
+            app:layout_constraintEnd_toEndOf="@id/vw_control"
+            app:layout_constraintStart_toEndOf="@id/btn_alpha_minus"
+            app:layout_constraintTop_toTopOf="@id/tv_alpha_monitor" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

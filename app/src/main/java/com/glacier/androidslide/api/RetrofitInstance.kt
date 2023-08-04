@@ -1,6 +1,6 @@
 package com.glacier.androidslide.api
 
-import com.glacier.androidslide.model.Slide
+import com.glacier.androidslide.data.model.Slide
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

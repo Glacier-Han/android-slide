@@ -1,6 +1,6 @@
-package com.glacier.androidslide.model
+package com.glacier.androidslide.data.model
 
-import com.glacier.androidslide.util.SlideType
+import com.glacier.androidslide.data.enums.SlideType
 
 data class SquareSlide(
     override val id: String,
